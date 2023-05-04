@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class TradeDto {
-    private Long trading_no;
+    private long trading_no;
     private java.sql.Date trading_day;
     private java.sql.Date due_date;
     private String product_name;
