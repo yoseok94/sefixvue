@@ -20,9 +20,9 @@ public class AllowancesDeduction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "ad_seq", allocationSize = 1)
     @Column(name = "ad_no")
-    private Integer ad_no;
+    private long ad_no;
     @Column(name = "ad_code")
-    private int ad_code;
+    private Integer ad_code;
     @Column(name = "ad_name")
     private String ad_name;
     @Column(name = "ad_calculation")

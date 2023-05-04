@@ -20,23 +20,23 @@ public class Salary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "salary_seq", allocationSize = 1)
     @Column(name = "salary_no")
-    private Integer salary_no;
+    private long salary_no;
     @Column(name = "emp_id")
     private String emp_id;
     @Column(name = "dept_id")
     private String dept_id;
     @Column(name = "ad_no")
-    private Integer ad_no;
+    private long ad_no;
     @Column(name = "salaryclassification")
-    private int salaryclassification;
+    private Integer salaryclassification;
     @Column(name = "totalamountpaid")
-    private long totalamountpaid;
+    private Integer totalamountpaid;
     @Column(name = "actualpaymentamount")
     private long actualpaymentamount;
     @Column(name = "workdays")
-    private int workdays;
+    private Integer workdays;
     @Column(name = "totalworkhours")
-    private int totalworkhours;
+    private Integer totalworkhours;
     @Column(name = "payment_date")
     private java.sql.Date payment_date;
     @Column(name = "paystubsend_date")
