@@ -43,7 +43,7 @@ public class Employee {
     @Column(name = "dept_name")
     private String dept_name;
     @Column(name = "emp_annual")
-    private int emp_annual;
+    private Integer emp_annual;
     @Column(name = "emp_profile")
     private String emp_profile;
 }

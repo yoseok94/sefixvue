@@ -8,10 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name="PlanDisbursement")
+@Table(name="PLAN_DISBURSEMENT")
 public class PlanDisbursement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,8 +51,8 @@ public class PlanDisbursement {
     private int status;
     @Column(name = "dept_name")
     private String dept_name;
-    @Column(name = "dept_id")
-    private int dept_id;
+    @Column(name = "emp_id")
+    private String emp_id;
     @Column(name = "account_name")
     private String account_name;
     @Column(name = "product_no")
