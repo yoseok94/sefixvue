@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.fix.sefixvue.management.entity.ApplicationRepository;
 
 @Data
 @AllArgsConstructor
@@ -17,11 +18,12 @@ public class ApplicationDto {
     private String app_email;
     private java.sql.Date app_birth;
     private java.sql.Date app_hiredate;
-    private long app_level;
+    private int app_level;
     private String app_status;
     private String app_deptname;
     private String app_change;
     private String app_reason;
     private java.sql.Date app_date;
-    private long app_accept;
+    private int app_accept;
+
 }
