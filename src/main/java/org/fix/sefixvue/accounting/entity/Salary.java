@@ -26,7 +26,7 @@ public class Salary {
     @Column(name = "dept_id")
     private String dept_id;
     @Column(name = "ad_no")
-    private long ad_no;
+    private Long ad_no;
     @Column(name = "salaryclassification")
     private Integer salaryclassification;
     @Column(name = "totalamountpaid")

@@ -12,9 +12,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "Allowances_deduction")
+@Table(name = "ALLOWANCES_DEDUCTIONS")
 @Entity
-public class AllowancesDeduction {
+public class AllowancesDeductions {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
