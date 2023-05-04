@@ -16,6 +16,7 @@ public class SalaryDto {
     private long ad_no;    // 수당 및 공제 순번
     private int salaryclassification;    // 급여 구분
     private long totalamountpaid;    // 급여 지급 총액
+    private long actualpaymentamount;    // 급여 실 지급액
     private int workdays;    // 근로일수
     private int totalworkhours;  // 총근로시간
     private java.sql.Date payment_date;    // 급여 지급 일자
