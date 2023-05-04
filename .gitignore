@@ -53,3 +53,10 @@ gen
 /src/main/resources/application.properties
 /gradle/wrapper/gradle-wrapper.jar
 /gradle/wrapper/gradle-wrapper.properties
+/src/main/generated/org/fix/sefixvue/accounting/entity/
+/src/main/generated/org/fix/sefixvue/admin/entity/
+/src/main/generated/org/fix/sefixvue/board/entity/
+/src/main/generated/org/fix/sefixvue/business/entity/
+/src/main/generated/org/fix/sefixvue/hrm/entity/
+/src/main/generated/org/fix/sefixvue/management/entity/
+/src/test/java/org/fix/sefixvue/
