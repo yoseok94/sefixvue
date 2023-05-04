@@ -11,12 +11,12 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder                              // 클래스로 컴파일 되라.
-@Table(name = "Slipstatement")                // 자동으로 생성될 테이블 이름이 BOARD 이다
+@Builder
+@Table(name = "Slipstatement")
 @Entity
 public class Slipstatement {
 
-    @Id                               // PK 처리
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "slipstatement_seq", allocationSize = 1)
     @Column(name = "slipstatement_no")

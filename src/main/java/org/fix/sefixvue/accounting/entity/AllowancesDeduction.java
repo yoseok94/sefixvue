@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Entity
 public class AllowancesDeduction {
 
-    @Id                               // PK 처리
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "ad_seq", allocationSize = 1)
     @Column(name = "ad_no")
