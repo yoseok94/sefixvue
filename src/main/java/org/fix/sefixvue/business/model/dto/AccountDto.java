@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class AccountDto {
-    private Long account_no;
+    private long account_no;
     private String account_name;
     private String representative_name;
     private String account_phone;
