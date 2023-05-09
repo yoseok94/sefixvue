@@ -20,13 +20,13 @@ public class Salary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "salary_seq", allocationSize = 1)
     @Column(name = "salary_no")
-    private long salary_no;
+    private long salaryno;
     @Column(name = "emp_id")
-    private String emp_id;
+    private String empid;
     @Column(name = "dept_id")
-    private String dept_id;
+    private String deptid;
     @Column(name = "ad_no")
-    private Long ad_no;
+    private Long adno;
     @Column(name = "salaryclassification")
     private Integer salaryclassification;
     @Column(name = "totalamountpaid")
@@ -38,8 +38,8 @@ public class Salary {
     @Column(name = "totalworkhours")
     private Integer totalworkhours;
     @Column(name = "payment_date")
-    private java.sql.Date payment_date;
+    private java.sql.Date paymentdate;
     @Column(name = "paystubsend_date")
-    private java.sql.Date paystubsend_date;
+    private java.sql.Date paystubsenddate;
 
 }

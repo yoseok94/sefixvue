@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class AttendenceDto {
-    private long attendence_no;
-    private String emp_id;
-    private String emp_name;
+    private long attendenceno;
+    private String empid;
+    private String empname;
     private java.sql.Date intime;
     private java.sql.Date outtime;
     private String inip;
     private String outip;
-    private java.sql.Date request_date;
+    private java.sql.Date requestdate;
     private String reason;
     private String reasonpr;
     private String holiday;

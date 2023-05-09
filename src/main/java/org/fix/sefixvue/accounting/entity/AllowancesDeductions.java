@@ -20,14 +20,14 @@ public class AllowancesDeductions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "ad_seq", allocationSize = 1)
     @Column(name = "ad_no")
-    private long ad_no;
+    private long adno;
     @Column(name = "ad_code")
-    private Integer ad_code;
+    private Integer adcode;
     @Column(name = "ad_name")
-    private String ad_name;
+    private String adname;
     @Column(name = "ad_calculation")
-    private String ad_calculation;
+    private String adcalculation;
     @Column(name = "ad_calculationmethod")
-    private String ad_calculationmethod;
+    private String adcalculationmethod;
 
 }

@@ -10,13 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class AccountDto {
-    private long account_no;
-    private String account_name;
-    private String representative_name;
-    private String account_phone;
-    private String account_fax;
-    private String account_address;
-    private String manager_name;
-    private String manager_phone;
-    private String manager_email;
+    private long accountno;
+    private String accountname;
+    private String representativename;
+    private String accountphone;
+    private String accountfax;
+    private String accountaddress;
+    private String managername;
+    private String managerphone;
+    private String manageremail;
 }

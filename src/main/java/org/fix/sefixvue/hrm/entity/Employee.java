@@ -19,31 +19,31 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "employee_seq", allocationSize = 1)
     @Column(name = "emp_no")
-    private long emp_no;
+    private long empno;
     @Column(name = "emp_id")
-    private String emp_id;
+    private String empid;
     @Column(name = "emp_pw")
-    private String emp_pw;
+    private String emppw;
     @Column(name = "emp_name")
-    private String emp_name;
+    private String empname;
     @Column(name = "emp_phone")
-    private String emp_phone;
+    private String empphone;
     @Column(name = "emp_address")
-    private String emp_address;
+    private String empaddress;
     @Column(name = "emp_email")
-    private String emp_email;
+    private String empemail;
     @Column(name = "emp_birth")
-    private java.sql.Date emp_birth;
+    private java.sql.Date empbirth;
     @Column(name = "emp_hiredate")
-    private java.sql.Date emp_hiredate;
+    private java.sql.Date emphiredate;
     @Column(name = "emp_level")
-    private int emp_level;
+    private int emplevel;
     @Column(name = "emp_status")
-    private String emp_status;
+    private String empstatus;
     @Column(name = "dept_name")
-    private String dept_name;
+    private String deptname;
     @Column(name = "emp_annual")
-    private Integer emp_annual;
+    private Integer empannual;
     @Column(name = "emp_profile")
-    private String emp_profile;
+    private String empprofile;
 }

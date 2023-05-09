@@ -18,43 +18,43 @@ public class PlanDisbursement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "plan_disbursement_seq", allocationSize = 1)
     @Column(name = "plan_no")
-    private long plan_no;
+    private long planno;
     @Column(name = "plan_title")
-    private String plan_title;
+    private String plantitle;
     @Column(name = "target_quantity")
-    private int target_quantity;
+    private int targetquantity;
     @Column(name = "target_amount")
-    private int target_amount;
+    private int targetamount;
     @Column(name = "plan_detail")
-    private String plan_detail;
+    private String plandetail;
     @Column(name = "plan_remarks")
-    private String plan_remarks;
+    private String planremarks;
     @Column(name = "plan_date")
-    private java.sql.Date plan_date;
+    private java.sql.Date plandate;
     @Column(name = "quantity")
     private int quantity;
     @Column(name = "disbursement_supply_price")
-    private int disbursement_supply_price;
+    private int disbursementsupplyprice;
     @Column(name = "disbursement_tax")
-    private int disbursement_tax;
+    private int disbursementtax;
     @Column(name = "total_amount")
-    private int total_amount;
+    private int totalamount;
     @Column(name = "tradetype")
     private int tradetype;
     @Column(name = "disbursement_detail")
-    private String disbursement_detail;
+    private String disbursementdetail;
     @Column(name = "disbursement_remarks")
-    private String disbursement_remarks;
+    private String disbursementremarks;
     @Column(name = "sent_date")
-    private java.sql.Date sent_date;
+    private java.sql.Date sentdate;
     @Column(name = "status")
     private int status;
     @Column(name = "dept_name")
-    private String dept_name;
+    private String deptname;
     @Column(name = "emp_id")
-    private String emp_id;
+    private String empid;
     @Column(name = "account_name")
-    private String account_name;
+    private String accountname;
     @Column(name = "product_no")
-    private int product_no;
+    private int productno;
 }

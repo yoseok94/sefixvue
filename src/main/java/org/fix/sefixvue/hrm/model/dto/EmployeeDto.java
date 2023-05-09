@@ -10,18 +10,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class EmployeeDto {
-    private long emp_no;
-    private String emp_id;
-    private String emp_pw;
-    private String emp_name;
-    private String emp_phone;
-    private String emp_address;
-    private String emp_email;
-    private java.sql.Date emp_birth;
-    private java.sql.Date emp_hiredate;
-    private int emp_level;
-    private String emp_status;
-    private String dept_name;
-    private int emp_annual;
-    private String emp_profile;
+    private long empno;
+    private String empid;
+    private String emppw;
+    private String empname;
+    private String empphone;
+    private String empaddress;
+    private String empemail;
+    private java.sql.Date empbirth;
+    private java.sql.Date emphiredate;
+    private int emplevel;
+    private String empstatus;
+    private String deptname;
+    private int empannual;
+    private String empprofile;
 }

@@ -18,21 +18,21 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "account_seq", allocationSize = 1)
     @Column(name = "account_no")
-    private long account_no;
+    private long accountno;
     @Column(name = "account_name")
-    private String account_name;
+    private String accountname;
     @Column(name = "representative_name")
-    private String representative_name;
+    private String representativename;
     @Column(name = "account_phone")
-    private String account_phone;
+    private String accountphone;
     @Column(name = "account_fax")
-    private String account_fax;
+    private String accountfax;
     @Column(name = "account_address")
-    private String account_address;
+    private String accountaddress;
     @Column(name = "manager_name")
-    private String manager_name;
+    private String managername;
     @Column(name = "manager_phone")
-    private String manager_phone;
+    private String managerphone;
     @Column(name = "manager_email")
-    private String manager_email;
+    private String manageremail;
 }

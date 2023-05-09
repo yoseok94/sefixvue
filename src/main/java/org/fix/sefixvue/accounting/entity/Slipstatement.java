@@ -20,16 +20,16 @@ public class Slipstatement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "slipstatement_seq", allocationSize = 1)
     @Column(name = "slipstatement_no")
-    private long slipstatement_no;
+    private long slipstatementno;
     @Column(name = "trading_no")
-    private long trading_no;
+    private long tradingno;
     @Column(name = "tradetype")
     private String tradetype;
     @Column(name = "slipstatement_amount")
-    private Integer slipstatement_amount;
+    private Integer slipstatementamount;
     @Column(name = "slipstatement_brief")
-    private String slipstatement_brief;
+    private String slipstatementbrief;
     @Column(name = "slipstatement_date")
-    private java.sql.Date slipstatement_date;
+    private java.sql.Date slipstatementdate;
 
 }

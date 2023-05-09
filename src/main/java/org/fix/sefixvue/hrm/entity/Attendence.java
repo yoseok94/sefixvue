@@ -19,11 +19,11 @@ public class Attendence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "attendence_seq", allocationSize = 1)
     @Column(name = "attendence_no")
-    private long attendence_no;
+    private long attendenceno;
     @Column(name = "emp_id")
-    private String emp_id;
+    private String empid;
     @Column(name = "emp_name")
-    private String emp_name;
+    private String empname;
     @Column(name = "intime")
     private java.sql.Date intime;
     @Column(name = "outtime")
@@ -33,7 +33,7 @@ public class Attendence {
     @Column(name = "outip")
     private String outip;
     @Column(name = "request_date")
-    private java.sql.Date request_date;
+    private java.sql.Date requestdate;
     @Column(name = "reason")
     private String reason;
     @Column(name = "reasonpr")

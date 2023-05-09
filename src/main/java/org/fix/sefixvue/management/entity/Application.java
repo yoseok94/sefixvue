@@ -18,32 +18,32 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "application_seq", allocationSize = 1)
     @Column(name = "app_no")
-    private long app_no;
+    private long appno;
     @Column(name = "app_id")
-    private String app_id;
+    private String appid;
     @Column(name = "app_name")
-    private String app_name;
+    private String appname;
     @Column(name = "app_phone")
-    private String app_phone;
+    private String appphone;
     @Column(name = "app_email")
-    private String app_email;
+    private String appemail;
     @Column(name = "app_birth")
-    private java.sql.Date app_birth;
+    private java.sql.Date appbirth;
     @Column(name = "app_hiredate")
-    private java.sql.Date app_hiredate;
+    private java.sql.Date apphiredate;
     @Column(name = "app_level")
-    private int app_level;
+    private int applevel;
     @Column(name = "app_status")
-    private String app_status;
+    private String appstatus;
     @Column(name = "app_deptname")
-    private String app_deptname;
+    private String appdeptname;
     @Column(name = "app_change")
-    private String app_change;
+    private String appchange;
     @Column(name = "app_reason")
-    private String app_reason;
+    private String appreason;
     @Column(name = "app_date")
-    private java.sql.Date app_date;
+    private java.sql.Date appdate;
     @Column(name = "app_accept")
-    private int app_accept;
+    private int appaccept;
 
 }

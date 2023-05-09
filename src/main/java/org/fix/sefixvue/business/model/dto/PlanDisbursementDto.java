@@ -10,25 +10,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class PlanDisbursementDto {
-    private long plan_no;
-    private String plan_title;
-    private int target_quantity;
-    private int target_amount;
-    private String plan_detail;
-    private String plan_remarks;
-    private java.sql.Date plan_date;
+    private long planno;
+    private String plantitle;
+    private int targetquantity;
+    private int targetamount;
+    private String plandetail;
+    private String planremarks;
+    private java.sql.Date plandate;
     private int quantity;
-    private int disbursement_supply_price;
-    private int disbursement_tax;
-    private int total_amount;
-    private int trade_type;
-    private String disbursement_detail;
-    private String disbursement_remarks;
-    private java.sql.Date sent_date;
+    private int disbursementsupplyprice;
+    private int disbursementtax;
+    private int totalamount;
+    private int tradetype;
+    private String disbursementdetail;
+    private String disbursementremarks;
+    private java.sql.Date sentdate;
     private int status;
-    private String dept_name;
-    private String emp_id;
-    private String account_name;
-    private Long product_no;
+    private String deptname;
+    private String empid;
+    private String accountname;
+    private Long productno;
 
 }
