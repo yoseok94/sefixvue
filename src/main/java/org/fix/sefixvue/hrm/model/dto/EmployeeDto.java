@@ -17,9 +17,9 @@ public class EmployeeDto {
     private String empphone;
     private String empaddress;
     private String empemail;
-    private java.sql.Date empbirth;
-    private java.sql.Date emphiredate;
-    private int emplevel;
+    private String empbirth;
+    private String emphiredate;
+    private String emplevel;
     private String empstatus;
     private String deptname;
     private int empannual;

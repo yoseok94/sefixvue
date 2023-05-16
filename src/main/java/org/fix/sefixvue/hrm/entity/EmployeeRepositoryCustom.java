@@ -20,6 +20,7 @@ import static org.fix.sefixvue.hrm.entity.QEmployee.employee;
 public class EmployeeRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
+
     public Page<Employee> findAllBySearchCondition(Pageable pageable, SearchCondition searchCondition) {
         JPAQuery<Employee> query = queryFactory.selectFrom(employee)
                 .where(searchKeywords(searchCondition.getSk(), searchCondition.getSv()));
@@ -39,7 +40,7 @@ public class EmployeeRepositoryCustom {
     private BooleanExpression searchKeywords(String sk, String sv) {
         if("ID".equals(sk)) {
             if(StringUtils.hasLength(sv)) {
-                return employee.empid.contains(sv);
+                return employee.empId.contains(sv);
             }
         } else if ("Name".equals(sk)) {
             if(StringUtils.hasLength(sv)) {

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Date;
 
 @Data
 @NoArgsConstructor
@@ -25,9 +24,9 @@ public class Attendence {
     @Column(name = "emp_name")
     private String empname;
     @Column(name = "intime")
-    private java.sql.Date intime;
+    private java.sql.Timestamp intime;
     @Column(name = "outtime")
-    private java.sql.Date outtime;
+    private java.sql.Timestamp outtime;
     @Column(name = "inip")
     private String inip;
     @Column(name = "outip")
@@ -38,8 +37,8 @@ public class Attendence {
     private String reason;
     @Column(name = "reasonpr")
     private String reasonpr;
-    @Column(name = "holiday")
-    private String holiday;
+    @Column(name = "request_result")
+    private String requestresult;
     @Column(name = "divide")
     private String divide;
 //    근태 정보 순번 ATTENDENCE_NO NUMBER O

@@ -4,9 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.fix.sefixvue.accounting.entity.Salary;
+import org.fix.sefixvue.business.entity.PlanDisbursement;
+import org.fix.sefixvue.business.entity.Trade;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,7 +26,7 @@ public class Employee {
     @Column(name = "emp_no")
     private long empno;
     @Column(name = "emp_id")
-    private String empid;
+    private String empId;
     @Column(name = "emp_pw")
     private String emppw;
     @Column(name = "emp_name")
@@ -33,11 +38,11 @@ public class Employee {
     @Column(name = "emp_email")
     private String empemail;
     @Column(name = "emp_birth")
-    private java.sql.Date empbirth;
+    private LocalDateTime empbirth;
     @Column(name = "emp_hiredate")
-    private java.sql.Date emphiredate;
+    private LocalDateTime emphiredate;
     @Column(name = "emp_level")
-    private int emplevel;
+    private String emplevel;
     @Column(name = "emp_status")
     private String empstatus;
     @Column(name = "dept_name")
@@ -46,4 +51,11 @@ public class Employee {
     private Integer empannual;
     @Column(name = "emp_profile")
     private String empprofile;
+
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    private List<Employee> employeeList = new ArrayList<Employee>();
+
+    public void addEmployee(Employee employee){
+        employeeList.add(employee);
+    }
 }

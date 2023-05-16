@@ -13,13 +13,13 @@ public class AttendenceDto {
     private long attendenceno;
     private String empid;
     private String empname;
-    private java.sql.Date intime;
-    private java.sql.Date outtime;
+    private java.sql.Timestamp intime;
+    private java.sql.Timestamp outtime;
     private String inip;
     private String outip;
     private java.sql.Date requestdate;
     private String reason;
     private String reasonpr;
-    private String holiday;
+    private String requestresult;
     private String divide;
 }
