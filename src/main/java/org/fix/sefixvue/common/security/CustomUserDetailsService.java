@@ -19,7 +19,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String empId) throws UsernameNotFoundException {
         log.info("Load User By UserName : " + empId);
 
-        Employee employee = employeeRepository.findByEmpId(empId).get(0);
+        Employee employee = employeeRepository.findByEmpId(empId)
+                .orElseThrow(() -> new UsernameNotFoundException("Could not find employee with ID: " + empId));
+
 
         log.info("member : " + employee);
 

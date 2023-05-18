@@ -52,10 +52,4 @@ public class Employee {
     @Column(name = "emp_profile")
     private String empprofile;
 
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-    private List<Employee> employeeList = new ArrayList<Employee>();
-
-    public void addEmployee(Employee employee){
-        employeeList.add(employee);
-    }
 }

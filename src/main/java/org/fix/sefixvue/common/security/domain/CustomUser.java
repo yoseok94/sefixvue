@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class CustomUser extends User {
@@ -19,14 +20,11 @@ public class CustomUser extends User {
     }
 
     public CustomUser(Employee entity) {
-        // 사용자가 정의한 Member 타입을 스프링 시큐리티 UsersDetails 타입으로 변환한다.
         super(entity.getEmpId(), entity.getEmppw(),
-                entity.getEmployeeList().stream()
-                        .map(employee -> new SimpleGrantedAuthority(employee.getEmplevel()))
-                        .collect(Collectors.toList()));
-
+                Collections.singletonList(new SimpleGrantedAuthority(entity.getEmplevel())));
         this.employee = entity;
     }
+
 
     public Employee getMember() {
         return employee;

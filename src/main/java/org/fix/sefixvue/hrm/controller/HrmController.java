@@ -24,23 +24,6 @@ import java.util.List;
 public class HrmController {
     private final HrmService hrmService;
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthenticationRequest authenticationRequest) {
-        String username = authenticationRequest.getUsername();
-        String password = authenticationRequest.getPassword();
-
-        log.info("username = " + username + " password = " + password);
-
-        List<String> roles = new ArrayList<String>();
-        roles.add("ROLE_MEMBER");
-
-        String token = username + "_" + roles;
-
-        log.info("token : " + token);
-
-        return new ResponseEntity<String>(token, HttpStatus.OK);
-    }
-
     @GetMapping("/hrm/hrmmember")
     public Header<List<EmployeeDto>> employeeList(
             @PageableDefault(sort = {"empno"}) Pageable pageable,
