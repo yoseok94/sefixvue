@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.fix.sefixvue.business.entity.Trade;
 
 import javax.persistence.*;
 
@@ -21,12 +22,15 @@ public class Slipstatement {
     @SequenceGenerator(name = "mySequence", sequenceName = "slipstatement_seq", allocationSize = 1)
     @Column(name = "slipstatement_no")
     private long slipstatementno;
-    @Column(name = "trading_no")
-    private long tradingno;
+
+    @ManyToOne
+    @JoinColumn(name = "trading_no", insertable = false, updatable = false)
+    private Trade trade;
+
     @Column(name = "tradetype")
     private String tradetype;
     @Column(name = "slipstatement_amount")
-    private Integer slipstatementamount;
+    private int slipstatementamount;
     @Column(name = "slipstatement_brief")
     private String slipstatementbrief;
     @Column(name = "slipstatement_date")

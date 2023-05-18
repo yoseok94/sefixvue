@@ -12,6 +12,10 @@ import org.fix.sefixvue.hrm.entity.EmployeeRepositoryCustom;
 import org.fix.sefixvue.hrm.model.dto.EmployeeDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Transactional
-public class HrmService {
+public class HrmService implements UserDetailsService {
     private final EmployeeRepositoryCustom employeeRepositoryCustom;
     private final EmployeeRepository employeeRepository;
     private final AttendenceRepository attendenceRepository;
@@ -35,7 +39,7 @@ public class HrmService {
         for (Employee employee : employees) {
             EmployeeDto employeeDto = EmployeeDto.builder()
                     .empno(employee.getEmpno())
-                    .empid(employee.getEmpId())
+                    .empId(employee.getEmpId())
                     .empname(employee.getEmpname())
                     .empstatus(employee.getEmpstatus())
                     .deptname(employee.getDeptname())
@@ -71,7 +75,7 @@ public class HrmService {
         Employee employee = employeeRepository.findById(empno).orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
         return EmployeeDto.builder()
                 .empno(employee.getEmpno())
-                .empid(employee.getEmpId())
+                .empId(employee.getEmpId())
                 .emppw(employee.getEmppw())
                 .empname(employee.getEmpname())
                 .empphone(employee.getEmpphone())
@@ -90,5 +94,24 @@ public class HrmService {
     public void delete(Long empno) {
         Employee employee = employeeRepository.findById(empno).orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
         employeeRepository.delete(employee);
+    }
+
+    public Employee read(Long empno) throws Exception {
+        return employeeRepository.getOne(empno);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return employeeRepository.findByEmpId(username)
+                .map(this::createUserDetails)
+                .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+    }
+
+    private UserDetails createUserDetails(Employee employee) {
+        return User.builder()
+                .username(employee.getEmpId())
+                .password(employee.getEmppw())
+                .roles(employee.getEmplevel())
+                .build();
     }
 }

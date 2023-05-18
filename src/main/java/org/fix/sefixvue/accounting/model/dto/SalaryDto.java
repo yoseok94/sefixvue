@@ -5,21 +5,31 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class SalaryDto {
-    private long salaryno;    // 급여순번
-    private String empid;    // 사번
-    private String deptid;    // 부서 아이디
-    private long adno;    // 수당 및 공제 순번
-    private int salaryclassification;    // 급여 구분
-    private long totalamountpaid;    // 급여 지급 총액
-    private long actualpaymentamount;    // 급여 실 지급액
-    private int workdays;    // 근로일수
-    private int totalworkhours;  // 총근로시간
-    private java.sql.Date paymentdate;    // 급여 지급 일자
-    private java.sql.Date paystubsenddate;    // 명세서 발송 일자
-
+    private long salaryno;                              // 급여순번
+    private String empid;                               // 사원코드
+    private String empname;                             // 사원이름
+    private String jobname;                               // 직급이름
+    private String deptname;                             // 부서이름
+    private int workhours;                              // 근무시간
+    private int overtimehours;                              // 시간외근무시간
+    private String basesalary;                              // 기본급여
+    private String overtimesalary;                   // 초과근무수당
+    private String totalpaymentsalary;                     // 지급총액
+    private String earnedincometax;                        // 근로소득세
+    private String localincomtax;                          // 지방소득세
+    private String nationalpensionfee;                     // 국민연금료
+    private String healthinsurancepremium;                 // 건강보험료
+    private String employmentinsurancepremium;             // 고용보험료
+    private String longtermcareinsurancepremium;           // 장기요양보험료
+    private String totaldeductionsamount;                  // 공제총액
+    private String actualpaymentsalary;                   // 실지급액
+    private java.util.Date paymentdate;                 // 지급연월일
+    private java.util.Date emp_hiredate;                // 입사일자
 }

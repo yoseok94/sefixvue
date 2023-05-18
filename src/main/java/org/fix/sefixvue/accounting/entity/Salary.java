@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.fix.sefixvue.hrm.entity.Employee;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
@@ -16,30 +18,49 @@ import javax.persistence.*;
 @Entity
 public class Salary {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "salary_seq", allocationSize = 1)
     @Column(name = "salary_no")
     private long salaryno;
+
     @Column(name = "emp_id")
     private String empid;
-    @Column(name = "dept_id")
-    private String deptid;
-    @Column(name = "ad_no")
-    private Long adno;
-    @Column(name = "salaryclassification")
-    private Integer salaryclassification;
-    @Column(name = "totalamountpaid")
-    private Integer totalamountpaid;
-    @Column(name = "actualpaymentamount")
-    private long actualpaymentamount;
-    @Column(name = "workdays")
-    private Integer workdays;
-    @Column(name = "totalworkhours")
-    private Integer totalworkhours;
-    @Column(name = "payment_date")
-    private java.sql.Date paymentdate;
-    @Column(name = "paystubsend_date")
-    private java.sql.Date paystubsenddate;
-
+    @Column(name = "emp_name")
+    private String empname;
+    @Column(name = "emp_level")
+    private String emplevel;
+    @Column(name = "dept_name")
+    private String deptname;
+    @Column(name = "workhours")
+    private int workhours;
+    @Column(name = "overtimehours")
+    private int overtimehours;
+    @Column(name = "basesalary")
+    private int basesalary;
+    @Column(name = "overtimesalary")
+    private int overtimesalary;
+    @Column(name = "totalpaymentsalary")
+    private int totalpaymentsalary;
+    @Column(name = "paymentdate")
+    private java.util.Date paymentdate;
+    @Column(name = "emp_hiredate")
+    private java.util.Date emphiredate;
+    @Column(name = "earnedincometax")
+    private int earnedincometax;
+    @Column(name = "localincometax")
+    private int localincometax;
+    @Column(name = "nationalpensionfee")
+    private int nationalpensionfee;
+    @Column(name = "healthinsurancepremium")
+    private int healthinsurancepremium;
+    @Column(name = "employmentinsurancepremium")
+    private int employmentinsurancepremium;
+    @Column(name = "longtermcareinsurancepremium")
+    private int longtermcareinsurancepremium;
+    @Column(name = "totaldeductionsamount")
+    private int totaldeductionsamount;
+    @Column(name = "actualpaymentsalary")
+    private int actualpaymentsalary;
 }

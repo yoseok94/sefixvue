@@ -22,12 +22,14 @@ public class AllowancesDeductions {
     @Column(name = "ad_no")
     private long adno;
     @Column(name = "ad_code")
-    private Integer adcode;
+    private int adcode;
     @Column(name = "ad_name")
     private String adname;
     @Column(name = "ad_calculation")
     private String adcalculation;
     @Column(name = "ad_calculationmethod")
     private String adcalculationmethod;
+
+
 
 }
