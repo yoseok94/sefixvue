@@ -114,4 +114,25 @@ public class HrmService implements UserDetailsService {
                 .roles(employee.getEmplevel())
                 .build();
     }
+
+    public EmployeeDto getEmployeeInfo(String empId) {
+        Employee employee = employeeRepository.findByEmpId(empId).orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
+        return EmployeeDto.builder()
+                .empno(employee.getEmpno())
+                .empId(employee.getEmpId())
+                .emppw(employee.getEmppw())
+                .empname(employee.getEmpname())
+                .empphone(employee.getEmpphone())
+                .empaddress(employee.getEmpaddress())
+                .empemail(employee.getEmpemail())
+                .empbirth(employee.getEmpbirth().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .emphiredate(employee.getEmphiredate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .emplevel(employee.getEmplevel())
+                .empstatus(employee.getEmpstatus())
+                .deptname(employee.getDeptname())
+                .empannual(employee.getEmpannual())
+                .empprofile(employee.getEmpprofile())
+                .build();
+    }
+
 }
