@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +17,6 @@ import javax.persistence.*;
 public class Application {
     @Id                               // PK 처리
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @SequenceGenerator(name = "mySequence", sequenceName = "application_seq", allocationSize = 1)
     @Column(name = "app_no")
     private long appno;
     @Column(name = "app_id")
@@ -28,11 +28,11 @@ public class Application {
     @Column(name = "app_email")
     private String appemail;
     @Column(name = "app_birth")
-    private java.sql.Date appbirth;
+    private LocalDateTime appbirth;
     @Column(name = "app_hiredate")
-    private java.sql.Date apphiredate;
+    private LocalDateTime apphiredate;
     @Column(name = "app_level")
-    private int applevel;
+    private String applevel;
     @Column(name = "app_status")
     private String appstatus;
     @Column(name = "app_deptname")
@@ -42,8 +42,8 @@ public class Application {
     @Column(name = "app_reason")
     private String appreason;
     @Column(name = "app_date")
-    private java.sql.Date appdate;
+    private LocalDateTime appdate;
     @Column(name = "app_accept")
-    private int appaccept;
+    private String appaccept;
 
 }
