@@ -14,5 +14,5 @@ public class DeptDto {
     private String productid;    // 상품 아이디
     private String deptid;    // 부서 아이디
     private String deptname;    // 부서 이름
-    private java.sql.Date deptdate;    // 부서 작성일시
+    private String deptdate;    // 부서 작성일시
 }

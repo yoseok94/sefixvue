@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -18,7 +19,7 @@ public class Notice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @SequenceGenerator(name = "mySequence", sequenceName = "notice_seq", allocationSize = 1)
+//    @SequenceGenerator(name = "mySequence", sequenceName = "notice_seq", allocationSize = 1)
     @Column(name = "notice_no")
     private long noticeno;    // 공지사항 순번
     @Column(name = "notice_title")
@@ -30,5 +31,5 @@ public class Notice {
     @Column(name = "notice_img")
     private String noticeimg;    // 공지사항 첨부 이미지
     @Column(name = "notice_date")
-    private java.sql.Date noticedate;    // 공지사항 작성 일시
+    private LocalDateTime noticedate;    // 공지사항 작성 일시
 }
