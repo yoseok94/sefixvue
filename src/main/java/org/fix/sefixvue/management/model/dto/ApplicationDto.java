@@ -16,14 +16,14 @@ public class ApplicationDto {
     private String appname;
     private String appphone;
     private String appemail;
-    private java.sql.Date appbirth;
-    private java.sql.Date apphiredate;
-    private int applevel;
+    private String appbirth;
+    private String apphiredate;
+    private String applevel;
     private String appstatus;
     private String appdeptname;
     private String appchange;
     private String appreason;
-    private java.sql.Date appdate;
-    private int appaccept;
+    private String appdate;
+    private String appaccept;
 
 }
