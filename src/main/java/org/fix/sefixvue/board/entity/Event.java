@@ -19,7 +19,6 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @SequenceGenerator(name = "mySequence", sequenceName = "event_seq", allocationSize = 1)
     @Column(name = "event_no")
     private long eventno;    // 이벤트 순번
     @Column(name = "event_title")

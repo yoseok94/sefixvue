@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 
@@ -16,9 +17,9 @@ import javax.persistence.*;
 @Entity
 public class Product {
 
+    //    @SequenceGenerator(name = "mySequence", sequenceName = "product_seq", allocationSize = 1)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @SequenceGenerator(name = "mySequence", sequenceName = "product_seq", allocationSize = 1)
     @Column(name = "product_no")
     private long productno;    // 상품 순번
     @Column(name = "product_id")
@@ -39,4 +40,7 @@ public class Product {
     private String productimg;    // 상품 첨부 이미지
     @Column(name = "product_remarks")
     private String productremarks;    // 상품 비고
+
+    @Transient
+    private MultipartFile picture;
 }
