@@ -119,6 +119,7 @@ public class HrmService implements UserDetailsService {
         Employee employee = employeeRepository.findByEmpId(empId).orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
         return EmployeeDto.builder()
                 .empno(employee.getEmpno())
+                .emppw(employee.getEmppw())
                 .empId(employee.getEmpId())
                 .empname(employee.getEmpname())
                 .empphone(employee.getEmpphone())
