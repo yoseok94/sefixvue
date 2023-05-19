@@ -120,7 +120,6 @@ public class HrmService implements UserDetailsService {
         return EmployeeDto.builder()
                 .empno(employee.getEmpno())
                 .empId(employee.getEmpId())
-                .emppw(employee.getEmppw())
                 .empname(employee.getEmpname())
                 .empphone(employee.getEmpphone())
                 .empaddress(employee.getEmpaddress())

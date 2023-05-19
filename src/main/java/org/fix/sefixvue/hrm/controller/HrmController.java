@@ -53,7 +53,7 @@ public class HrmController {
         hrmService.update(employeeDto);
     }
 
-    @GetMapping("/hrm/employeeinfo")
+    @GetMapping("/hrm/employeeinfo/{empId}")
     public EmployeeDto getEmployeeInfo(@PathVariable String empId) {
         return hrmService.getEmployeeInfo(empId);
     }
