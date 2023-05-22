@@ -300,7 +300,6 @@ public class AccountingService {
                 .emplevel(employee.getEmplevel())
                 .empstatus(employee.getEmpstatus())
                 .deptname(employee.getDeptname())
-                .empannual(employee.getEmpannual())
                 .empprofile(employee.getEmpprofile())
                 .build();
     }
