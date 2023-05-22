@@ -36,6 +36,7 @@ public class HrmService implements UserDetailsService {
     private final EmployeeRepositoryCustom employeeRepositoryCustom;
     private final EmployeeRepository employeeRepository;
     private final AttendenceRepository attendenceRepository;
+    private final AttendenceRepositoryCustom attendenceRepositoryCustom;
 
     public Header<List<EmployeeDto>> getEmployeeList(Pageable pageable, SearchCondition searchCondition) {
         List<EmployeeDto> employeeDtos = new ArrayList<>();
@@ -64,6 +65,67 @@ public class HrmService implements UserDetailsService {
         return Header.OK(employeeDtos, pagination);
     }
 
+    public Header<List<AttendenceDto>> getAttendenceList(Pageable pageable, SearchCondition searchCondition) {
+        List<AttendenceDto> attendenceDtos = new ArrayList<>();
+
+        Page<Attendence> attendences = attendenceRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
+        for (Attendence attendence : attendences) {
+            if(attendence.getIntime() != null && attendence.getOuttime() != null && attendence.getRequestdate() != null) {
+                AttendenceDto attendenceDto = AttendenceDto.builder()
+                        .attendenceno(attendence.getAttendenceno())
+                        .empId(attendence.getEmpId())
+                        .empname(attendence.getEmpname())
+                        .emplevel(attendence.getEmplevel())
+                        .reason(attendence.getReason())
+                        .reasonpr(attendence.getReasonpr())
+                        .deptname(attendence.getDeptname())
+                        .divide(attendence.getDivide())
+                        .intime(attendence.getIntime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
+                        .outtime(attendence.getOuttime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
+                        .requestdate(attendence.getRequestdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                        .requestresult(attendence.getRequestresult())
+                        .build();
+                attendenceDtos.add(attendenceDto);
+            }else if(attendence.getIntime() != null && attendence.getOuttime() != null && attendence.getRequestdate() == null){
+                AttendenceDto attendenceDto = AttendenceDto.builder()
+                        .attendenceno(attendence.getAttendenceno())
+                        .empId(attendence.getEmpId())
+                        .empname(attendence.getEmpname())
+                        .emplevel(attendence.getEmplevel())
+                        .deptname(attendence.getDeptname())
+                        .divide(attendence.getDivide())
+                        .intime(attendence.getIntime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
+                        .outtime(attendence.getOuttime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
+                        .requestresult(attendence.getRequestresult())
+                        .build();
+                attendenceDtos.add(attendenceDto);
+            }else if(attendence.getRequestdate() != null){
+                AttendenceDto attendenceDto = AttendenceDto.builder()
+                        .attendenceno(attendence.getAttendenceno())
+                        .empId(attendence.getEmpId())
+                        .empname(attendence.getEmpname())
+                        .emplevel(attendence.getEmplevel())
+                        .reason(attendence.getReason())
+                        .reasonpr(attendence.getReasonpr())
+                        .deptname(attendence.getDeptname())
+                        .divide(attendence.getDivide())
+                        .requestdate(attendence.getRequestdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                        .requestresult(attendence.getRequestresult())
+                        .build();
+                attendenceDtos.add(attendenceDto);
+            }
+        }
+
+        Pagination pagination = new Pagination(
+                (int) attendences.getTotalElements()
+                , pageable.getPageNumber() + 1
+                , pageable.getPageSize()
+                , 10
+        );
+
+        return Header.OK(attendenceDtos, pagination);
+    }
+
     public Employee updateEmpStatus(EmployeeDto employeeDto) {
         Employee employee = employeeRepository.findById(employeeDto.getEmpno()).orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
         employee.setEmpstatus(employeeDto.getEmpstatus());
@@ -72,7 +134,10 @@ public class HrmService implements UserDetailsService {
 
     public Employee update(EmployeeDto employeeDto) {
         Employee employee = employeeRepository.findById(employeeDto.getEmpno()).orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
-
+        employee.setEmppw(employeeDto.getEmppw());
+        employee.setEmpname(employeeDto.getEmpname());
+        employee.setEmpaddress(employeeDto.getEmpaddress());
+        employee.setEmplevel(employeeDto.getEmplevel());
         return employeeRepository.save(employee);
     }
 
@@ -150,6 +215,7 @@ public class HrmService implements UserDetailsService {
         Attendence attendence = Attendence.builder()
                 .empId(attendenceDto.getEmpId())
                 .empname(attendenceDto.getEmpname())
+                .emplevel(attendenceDto.getEmplevel())
                 .deptname(attendenceDto.getDeptname())
                 .requestresult("N")
                 .intime(LocalDateTime.now())
@@ -181,6 +247,7 @@ public class HrmService implements UserDetailsService {
                     .attendenceno(attendence.getAttendenceno())
                     .empId(attendence.getEmpId())
                     .empname(attendence.getEmpname())
+                    .emplevel(attendence.getEmplevel())
                     .deptname(attendence.getDeptname())
                     .requestdate(attendence.getRequestdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .requestresult(attendence.getRequestresult())
@@ -190,6 +257,7 @@ public class HrmService implements UserDetailsService {
                     .attendenceno(attendence.getAttendenceno())
                     .empId(attendence.getEmpId())
                     .empname(attendence.getEmpname())
+                    .emplevel(attendence.getEmplevel())
                     .deptname(attendence.getDeptname())
                     .requestdate(attendence.getRequestdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .requestresult(attendence.getRequestresult())
@@ -201,6 +269,7 @@ public class HrmService implements UserDetailsService {
                     .attendenceno(attendence.getAttendenceno())
                     .empId(attendence.getEmpId())
                     .empname(attendence.getEmpname())
+                    .emplevel(attendence.getEmplevel())
                     .deptname(attendence.getDeptname())
                     .requestdate(attendence.getRequestdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .requestresult(attendence.getRequestresult())
@@ -211,6 +280,12 @@ public class HrmService implements UserDetailsService {
                     .divide(attendence.getDivide())
                     .build();
         }
+    }
+
+    public Attendence updateAttendence(AttendenceDto attendenceDto) {
+        Attendence attendence = attendenceRepository.findById(attendenceDto.getAttendenceno()).orElseThrow(() -> new RuntimeException("근태 정보를 찾을 수 없습니다."));
+        attendence.setRequestresult(attendenceDto.getRequestresult());
+        return attendenceRepository.save(attendence);
     }
 
     public Attendence update(AttendenceDto attendenceDto) {
@@ -251,6 +326,7 @@ public class HrmService implements UserDetailsService {
                 .empId(attendenceDto.getEmpId())
                 .empname(attendenceDto.getEmpname())
                 .deptname(attendenceDto.getDeptname())
+                .emplevel(attendenceDto.getEmplevel())
                 .requestresult(attendenceDto.getRequestresult())
                 .reason(attendenceDto.getReason())
                 .reasonpr(attendenceDto.getReasonpr())
@@ -270,5 +346,25 @@ public class HrmService implements UserDetailsService {
         attendence.setRequestresult(attendenceDto.getRequestresult());
 
         return attendenceRepository.save(attendence);
+    }
+
+    public Employee createNewMember(EmployeeDto employeeDto) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        Employee employee = Employee.builder()
+                .empId(employeeDto.getEmpId())
+                .emppw(employeeDto.getEmppw())
+                .empname(employeeDto.getEmpname())
+                .empphone(employeeDto.getEmpphone())
+                .empaddress(employeeDto.getEmpaddress())
+                .empemail(employeeDto.getEmpemail())
+                .empstatus("N")
+                .empbirth(LocalDate.parse(employeeDto.getEmpbirth(), formatter))
+                .emphiredate(LocalDate.parse(employeeDto.getEmphiredate(), formatter))
+                .deptname("부서1")
+                .emplevel(employeeDto.getEmplevel())
+                .build();
+
+        return employeeRepository.save(employee);
     }
 }

@@ -35,11 +35,22 @@ public class HrmController {
 
         return jwtTokenProvider.createToken(employee.getEmpId(), employee.getEmplevel());
     }
+
+    @PostMapping("/hrm/newmember")
+    public Employee createNewMember(@RequestBody EmployeeDto employeeDto){
+        return hrmService.createNewMember(employeeDto);
+    }
     @GetMapping("/hrm/hrmmember")
     public Header<List<EmployeeDto>> employeeList(
             @PageableDefault(sort = {"empno"}) Pageable pageable,
             SearchCondition searchCondition) {
         return hrmService.getEmployeeList(pageable, searchCondition);
+    }
+    @GetMapping("/hrm/adlist")
+    public Header<List<AttendenceDto>> attendenceList(
+            @PageableDefault(sort = {"attendenceno"}) Pageable pageable,
+            SearchCondition searchCondition) {
+        return hrmService.getAttendenceList(pageable, searchCondition);
     }
     @PatchMapping("/hrm/employeequit")
     public Employee employeeQuit(@RequestBody EmployeeDto employeeDto){
@@ -49,6 +60,11 @@ public class HrmController {
     public EmployeeDto getEmployee(@PathVariable Long empno){
         return hrmService.getEmployee(empno);
     }
+    @PatchMapping("/hrm/changeresult")
+    public void updateAttendence(@RequestBody AttendenceDto attendenceDto) {
+        hrmService.updateAttendence(attendenceDto);
+    }
+
     @PatchMapping("/hrm/hrmup")
     public void updateEmployee(@RequestBody EmployeeDto employeeDto) {
         hrmService.update(employeeDto);

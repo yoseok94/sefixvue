@@ -9,6 +9,7 @@ import org.fix.sefixvue.business.entity.PlanDisbursement;
 import org.fix.sefixvue.business.entity.Trade;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +38,9 @@ public class Employee {
     @Column(name = "emp_email")
     private String empemail;
     @Column(name = "emp_birth")
-    private LocalDateTime empbirth;
+    private LocalDate empbirth;
     @Column(name = "emp_hiredate")
-    private LocalDateTime emphiredate;
+    private LocalDate emphiredate;
     @Column(name = "emp_level")
     private String emplevel;
     @Column(name = "emp_status")

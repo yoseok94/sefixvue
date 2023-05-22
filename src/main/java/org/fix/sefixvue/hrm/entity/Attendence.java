@@ -24,6 +24,8 @@ public class Attendence {
     private String empId;
     @Column(name = "emp_name")
     private String empname;
+    @Column(name = "emp_level")
+    private String emplevel;
     @Column(name = "dept_name")
     private String deptname;
     @Column(name = "intime")

@@ -13,6 +13,7 @@ public class AttendenceDto {
     private long attendenceno;
     private String empId;
     private String empname;
+    private String emplevel;
     private String deptname;
     private String intime;
     private String outtime;
