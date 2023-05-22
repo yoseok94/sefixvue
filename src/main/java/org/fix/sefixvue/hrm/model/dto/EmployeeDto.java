@@ -22,7 +22,6 @@ public class EmployeeDto {
     private String emplevel;
     private String empstatus;
     private String deptname;
-    private int empannual;
     private String empprofile;
 //    사원 순번 EMP_NO NUMBER O
 //    사원 아이디 EMP_ID VARCHAR2(50) UNIQUE

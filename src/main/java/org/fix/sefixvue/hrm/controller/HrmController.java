@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.fix.sefixvue.common.Header;
 import org.fix.sefixvue.common.SearchCondition;
 
+import org.fix.sefixvue.hrm.entity.Attendence;
 import org.fix.sefixvue.hrm.entity.Employee;
 import org.fix.sefixvue.hrm.entity.EmployeeRepository;
+import org.fix.sefixvue.hrm.model.dto.AttendenceDto;
 import org.fix.sefixvue.hrm.model.dto.EmployeeDto;
 import org.fix.sefixvue.hrm.model.service.HrmService;
 import org.fix.sefixvue.jwt.JwtTokenProvider;
@@ -33,7 +35,6 @@ public class HrmController {
 
         return jwtTokenProvider.createToken(employee.getEmpId(), employee.getEmplevel());
     }
-
     @GetMapping("/hrm/hrmmember")
     public Header<List<EmployeeDto>> employeeList(
             @PageableDefault(sort = {"empno"}) Pageable pageable,
@@ -57,5 +58,25 @@ public class HrmController {
     public EmployeeDto getEmployeeInfo(@PathVariable String empId) {
         return hrmService.getEmployeeInfo(empId);
     }
-
+    //근태관리
+    @PostMapping("/hrm/adin")
+    public Attendence createAttendence(@RequestBody AttendenceDto attendenceDto){
+        return hrmService.createAttendence(attendenceDto);
+    }
+    @PatchMapping("/hrm/adout")
+    public void updateEmployee(@RequestBody AttendenceDto attendenceDto) {
+        hrmService.update(attendenceDto);
+    }
+    @GetMapping("/hrm/adinfo/{empId}")
+    public AttendenceDto checkInfo(@PathVariable String empId){
+        return hrmService.checkInfo(empId);
+    }
+    @PostMapping("/hrm/orderin")
+    public Attendence createOrder(@RequestBody AttendenceDto attendenceDto){
+        return hrmService.createOrder(attendenceDto);
+    }
+    @PatchMapping("/hrm/orderup")
+    public void updateOrder(@RequestBody AttendenceDto attendenceDto) {
+        hrmService.updateOrder(attendenceDto);
+    }
 }

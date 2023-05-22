@@ -22,7 +22,6 @@ import java.util.List;
 public class Employee {
     @Id                               // PK 처리
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @SequenceGenerator(name = "mySequence", sequenceName = "employee_seq", allocationSize = 1)
     @Column(name = "emp_no")
     private long empno;
     @Column(name = "emp_id")
@@ -47,8 +46,6 @@ public class Employee {
     private String empstatus;
     @Column(name = "dept_name")
     private String deptname;
-    @Column(name = "emp_annual")
-    private Integer empannual;
     @Column(name = "emp_profile")
     private String empprofile;
 

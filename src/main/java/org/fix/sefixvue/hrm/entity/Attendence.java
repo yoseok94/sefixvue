@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -16,23 +18,24 @@ import javax.persistence.*;
 public class Attendence {
     @Id                               // PK 처리
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @SequenceGenerator(name = "mySequence", sequenceName = "attendence_seq", allocationSize = 1)
     @Column(name = "attendence_no")
     private long attendenceno;
     @Column(name = "emp_id")
-    private String empid;
+    private String empId;
     @Column(name = "emp_name")
     private String empname;
+    @Column(name = "dept_name")
+    private String deptname;
     @Column(name = "intime")
-    private java.sql.Timestamp intime;
+    private LocalDateTime intime;
     @Column(name = "outtime")
-    private java.sql.Timestamp outtime;
+    private LocalDateTime outtime;
     @Column(name = "inip")
     private String inip;
     @Column(name = "outip")
     private String outip;
     @Column(name = "request_date")
-    private java.sql.Date requestdate;
+    private LocalDate requestdate;
     @Column(name = "reason")
     private String reason;
     @Column(name = "reasonpr")
@@ -41,17 +44,5 @@ public class Attendence {
     private String requestresult;
     @Column(name = "divide")
     private String divide;
-//    근태 정보 순번 ATTENDENCE_NO NUMBER O
-//    사원 아이디 EMP_ID VARCHAR2(50) O EMPLOYEE
-//    사원 이름 EMP_NAME VARCHAR2(30) NN
-//    출근시간 INTIME DATE N
-//    퇴근시간 OUTTIME DATE N
-//    출근 IP INIP VARCHAR2(100) N
-//    퇴근 IP OUTIP VARCHAR2(100) N
-//    근태 변동 신청 일자 REQUEST_DATE DATE N
-//    근태 신청 사유 REASON VARCHAR2(50) N
-//    기타 사유 추가 내용 REASONPR VARCHAR2(300) N
-//    휴무여부(Y/N) HOLIDAY CHAR(1) NN / DEFAULT(Y)
-//    구분1정상2비정상/
-//    일자별 근태 구분 DIVIDE NUMBER N
+
 }
