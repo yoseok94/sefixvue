@@ -2,6 +2,7 @@ package org.fix.sefixvue.hrm.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fix.sefixvue.admin.model.dto.DeptDto;
 import org.fix.sefixvue.common.Header;
 import org.fix.sefixvue.common.SearchCondition;
 
@@ -11,10 +12,12 @@ import org.fix.sefixvue.hrm.entity.EmployeeRepository;
 import org.fix.sefixvue.hrm.model.dto.AttendenceDto;
 import org.fix.sefixvue.hrm.model.dto.EmployeeDto;
 import org.fix.sefixvue.hrm.model.service.HrmService;
+import org.fix.sefixvue.jwt.ForbiddenException;
 import org.fix.sefixvue.jwt.JwtTokenProvider;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +35,16 @@ public class HrmController {
     public String login(@RequestBody EmployeeDto employeeDto) {
         Employee employee = employeeRepository.findByEmpId(employeeDto.getEmpId())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 ID 입니다."));
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        log.info("---------------------------------");
+        log.info(employeeDto.getEmppw());
+        log.info(employee.getEmppw());
+//        log.info();
+
+        if(!passwordEncoder.matches(employeeDto.getEmppw(), employee.getEmppw())){
+            throw new ForbiddenException("패스원드가 일치하지 않습니다.");
+        }
 
         return jwtTokenProvider.createToken(employee.getEmpId(), employee.getEmplevel());
     }
@@ -59,6 +72,10 @@ public class HrmController {
     @GetMapping("/hrm/hrmup/{empno}")
     public EmployeeDto getEmployee(@PathVariable Long empno){
         return hrmService.getEmployee(empno);
+    }
+    @GetMapping("/hrm/deptlist")
+    public List<DeptDto> deptList(){
+        return hrmService.getDeptList();
     }
     @PatchMapping("/hrm/changeresult")
     public void updateAttendence(@RequestBody AttendenceDto attendenceDto) {

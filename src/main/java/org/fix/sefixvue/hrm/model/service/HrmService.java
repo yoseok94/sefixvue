@@ -2,6 +2,9 @@ package org.fix.sefixvue.hrm.model.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fix.sefixvue.admin.entity.Dept;
+import org.fix.sefixvue.admin.entity.DeptRepository;
+import org.fix.sefixvue.admin.model.dto.DeptDto;
 import org.fix.sefixvue.common.Header;
 import org.fix.sefixvue.common.SearchCondition;
 import org.fix.sefixvue.common.Pagination;
@@ -15,6 +18,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +41,7 @@ public class HrmService implements UserDetailsService {
     private final EmployeeRepository employeeRepository;
     private final AttendenceRepository attendenceRepository;
     private final AttendenceRepositoryCustom attendenceRepositoryCustom;
+    private final DeptRepository deptRepository;
 
     public Header<List<EmployeeDto>> getEmployeeList(Pageable pageable, SearchCondition searchCondition) {
         List<EmployeeDto> employeeDtos = new ArrayList<>();
@@ -134,10 +139,15 @@ public class HrmService implements UserDetailsService {
 
     public Employee update(EmployeeDto employeeDto) {
         Employee employee = employeeRepository.findById(employeeDto.getEmpno()).orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
-        employee.setEmppw(employeeDto.getEmppw());
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        employee.setEmppw(passwordEncoder.encode(employeeDto.getEmppw()));
         employee.setEmpname(employeeDto.getEmpname());
         employee.setEmpaddress(employeeDto.getEmpaddress());
+        employee.setEmpemail(employeeDto.getEmpemail());
         employee.setEmplevel(employeeDto.getEmplevel());
+        employee.setDeptname(employeeDto.getDeptname());
         return employeeRepository.save(employee);
     }
 
@@ -351,9 +361,11 @@ public class HrmService implements UserDetailsService {
     public Employee createNewMember(EmployeeDto employeeDto) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
         Employee employee = Employee.builder()
                 .empId(employeeDto.getEmpId())
-                .emppw(employeeDto.getEmppw())
+                .emppw(passwordEncoder.encode(employeeDto.getEmppw()))
                 .empname(employeeDto.getEmpname())
                 .empphone(employeeDto.getEmpphone())
                 .empaddress(employeeDto.getEmpaddress())
@@ -361,10 +373,24 @@ public class HrmService implements UserDetailsService {
                 .empstatus("N")
                 .empbirth(LocalDate.parse(employeeDto.getEmpbirth(), formatter))
                 .emphiredate(LocalDate.parse(employeeDto.getEmphiredate(), formatter))
-                .deptname("부서1")
+                .deptname(employeeDto.getDeptname())
                 .emplevel(employeeDto.getEmplevel())
                 .build();
 
         return employeeRepository.save(employee);
+    }
+
+    public List<DeptDto> getDeptList() {
+        List<Dept> deptlist = deptRepository.findAll();
+        List<DeptDto> list = new ArrayList<>();
+
+        for(Dept entity : deptlist){
+            DeptDto deptDto = DeptDto.builder().deptno(entity.getDeptno()).deptname(entity.getDeptname()).build();
+            list.add(deptDto);
+        }
+
+        log.info(list.toString());
+
+        return list;
     }
 }
