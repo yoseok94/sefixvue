@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.fix.sefixvue.hrm.entity.QAttendence.attendence;
@@ -50,4 +51,5 @@ public class AttendenceRepositoryCustom {
 
         return null;
     }
+
 }

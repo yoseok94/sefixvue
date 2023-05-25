@@ -170,15 +170,6 @@ public class HrmService implements UserDetailsService {
                 .build();
     }
 
-    public void delete(Long empno) {
-        Employee employee = employeeRepository.findById(empno).orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
-        employeeRepository.delete(employee);
-    }
-
-    public Employee read(Long empno) throws Exception {
-        return employeeRepository.getOne(empno);
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return employeeRepository.findByEmpId(username)
@@ -248,7 +239,7 @@ public class HrmService implements UserDetailsService {
                 break;
             }
         }
-        if(attendence.getRequestdate() == null){
+        if(attendence.getRequestdate() == null || attendence.getIntime() == null){
             attendence.setRequestdate(LocalDate.now());
         }
 
@@ -269,7 +260,7 @@ public class HrmService implements UserDetailsService {
                     .empname(attendence.getEmpname())
                     .emplevel(attendence.getEmplevel())
                     .deptname(attendence.getDeptname())
-                    .requestdate(attendence.getRequestdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                    .requestdate(attendence.getIntime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .requestresult(attendence.getRequestresult())
                     .intime(attendence.getIntime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                     .inip(attendence.getInip())
@@ -281,7 +272,7 @@ public class HrmService implements UserDetailsService {
                     .empname(attendence.getEmpname())
                     .emplevel(attendence.getEmplevel())
                     .deptname(attendence.getDeptname())
-                    .requestdate(attendence.getRequestdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                    .requestdate(attendence.getIntime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .requestresult(attendence.getRequestresult())
                     .intime(attendence.getIntime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                     .inip(attendence.getInip())
@@ -390,6 +381,63 @@ public class HrmService implements UserDetailsService {
         }
 
         log.info(list.toString());
+
+        return list;
+    }
+
+    public List<AttendenceDto> getmylist(String empId) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String startDate = LocalDate.now().withDayOfMonth(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String enddate = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate startDate2 = LocalDate.parse(startDate, formatter);
+        LocalDate endDate2 = LocalDate.parse(enddate, formatter);
+
+        Sort sort = sortByAttendenceno();
+        List<Attendence> slist = attendenceRepository.findAll(sort);
+
+        List<Attendence> attendenceDateList = new ArrayList<>();
+        for(Attendence ad: slist){
+            if(ad.getEmpId().equals(empId)){
+                attendenceDateList.add(ad);
+            }
+        }
+
+
+        List<Attendence> attendenceList = new ArrayList<>();
+        for(Attendence entity: attendenceDateList){
+          if(!entity.getRequestdate().isBefore(startDate2) && !entity.getRequestdate().isAfter(endDate2)){
+              attendenceList.add(entity);
+          }
+        }
+
+
+        List<AttendenceDto> list = new ArrayList<>();
+
+        for(Attendence attendence : attendenceList){
+            if(attendence.getReason() == null){
+                attendence.setReason(" ");
+            }
+            if(attendence.getIntime() != null && attendence.getOuttime() != null) {
+                AttendenceDto attendencedto = AttendenceDto.builder()
+                        .attendenceno(attendence.getAttendenceno())
+                        .requestdate(attendence.getIntime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                        .intime(attendence.getIntime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
+                        .outtime(attendence.getOuttime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
+                        .reason(attendence.getReason())
+                        .divide(attendence.getDivide())
+                        .build();
+                list.add(attendencedto);
+            }else if(attendence.getIntime() == null && attendence.getReason() != null){
+                AttendenceDto attendencedto = AttendenceDto.builder()
+                        .attendenceno(attendence.getAttendenceno())
+                        .requestdate(attendence.getRequestdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                        .reason(attendence.getReason())
+                        .divide(attendence.getDivide())
+                        .build();
+                list.add(attendencedto);
+            }
+
+        }
 
         return list;
     }

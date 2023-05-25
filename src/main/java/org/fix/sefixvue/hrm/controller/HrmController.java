@@ -37,16 +37,16 @@ public class HrmController {
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 ID 입니다."));
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        log.info("---------------------------------");
-        log.info(employeeDto.getEmppw());
-        log.info(employee.getEmppw());
-//        log.info();
 
         if(!passwordEncoder.matches(employeeDto.getEmppw(), employee.getEmppw())){
             throw new ForbiddenException("패스원드가 일치하지 않습니다.");
         }
 
         return jwtTokenProvider.createToken(employee.getEmpId(), employee.getEmplevel());
+    }
+    @GetMapping("/hrm/myadlist/{empId}")
+    public List<AttendenceDto> getmylist(@PathVariable String empId) {
+        return hrmService.getmylist(empId);
     }
 
     @PostMapping("/hrm/newmember")
