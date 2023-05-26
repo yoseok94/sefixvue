@@ -18,7 +18,6 @@ import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
 @Slf4j
-//@RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
 

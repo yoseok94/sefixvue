@@ -55,6 +55,7 @@ public class HrmService implements UserDetailsService {
                     .empstatus(employee.getEmpstatus())
                     .deptname(employee.getDeptname())
                     .empstatus(employee.getEmpstatus())
+                    .emplevel(employee.getEmplevel())
                     .build();
 
             employeeDtos.add(employeeDto);

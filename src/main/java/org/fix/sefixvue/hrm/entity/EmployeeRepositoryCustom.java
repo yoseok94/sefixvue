@@ -58,6 +58,10 @@ public class EmployeeRepositoryCustom {
                 LocalDate date = LocalDate.parse(sv);
                 return employee.emphiredate.eq(date);
             }
+        } else if ("Level".equals(sk)) {
+            if (StringUtils.hasLength(sv)) {
+                return employee.emplevel.contains(sv);
+            }
         }
 
         return null;
