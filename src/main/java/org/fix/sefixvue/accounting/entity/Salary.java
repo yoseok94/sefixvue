@@ -9,6 +9,7 @@ import org.fix.sefixvue.hrm.entity.Employee;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -26,7 +27,7 @@ public class Salary {
     private long salaryno;
 
     @Column(name = "emp_id")
-    private String empid;
+    private String empId;
     @Column(name = "emp_name")
     private String empname;
     @Column(name = "emp_level")
@@ -42,11 +43,11 @@ public class Salary {
     @Column(name = "overtimesalary")
     private int overtimesalary;
     @Column(name = "totalpaymentsalary")
-    private int totalpaymentsalary;
+    private long totalpaymentsalary;
     @Column(name = "paymentdate")
-    private java.util.Date paymentdate;
+    private Date paymentdate;
     @Column(name = "emp_hiredate")
-    private java.util.Date emphiredate;
+    private Date emphiredate;
     @Column(name = "earnedincometax")
     private int earnedincometax;
     @Column(name = "localincometax")
@@ -62,5 +63,5 @@ public class Salary {
     @Column(name = "totaldeductionsamount")
     private int totaldeductionsamount;
     @Column(name = "actualpaymentsalary")
-    private int actualpaymentsalary;
+    private long actualpaymentsalary;
 }

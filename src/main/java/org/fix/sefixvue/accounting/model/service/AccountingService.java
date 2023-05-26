@@ -6,14 +6,21 @@ import org.fix.sefixvue.accounting.entity.*;
 import org.fix.sefixvue.accounting.model.dto.AllowancesDeductionsDto;
 import org.fix.sefixvue.accounting.model.dto.SalaryDto;
 import org.fix.sefixvue.accounting.model.dto.SlipstatementDto;
+import org.fix.sefixvue.accounting.model.dto.TradeSummaryDto;
+import org.fix.sefixvue.business.entity.Trade;
+import org.fix.sefixvue.business.entity.TradeRepository;
+import org.fix.sefixvue.business.entity.TradeRepositoryCustom;
+import org.fix.sefixvue.business.model.dto.TradeDto;
 import org.fix.sefixvue.common.Header;
 import org.fix.sefixvue.common.Pagination;
 import org.fix.sefixvue.common.SearchCondition;
 import org.fix.sefixvue.hrm.entity.Employee;
 import org.fix.sefixvue.hrm.entity.EmployeeRepository;
 import org.fix.sefixvue.hrm.model.dto.EmployeeDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +32,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.aspectj.runtime.internal.Conversions.intValue;
+import static org.fix.sefixvue.accounting.entity.QSalary.salary;
 
 
 @Slf4j
@@ -35,27 +47,18 @@ public class AccountingService {
 
     private final SalaryRepository salaryRepository;
     private final SalaryRepositoryCustom salaryRepositoryCustom;
-    private final AllowancesDeductionsRepository allowancesDeductionRepository;
+    private final AllowancesDeductionsRepository allowancesDeductionsRepository;
     private final AllowancesDeductionsRepositoryCustom allowancesDeductionsRepositoryCustom;
     private final SlipstatementRepository slipstatementRepository;
     private final SlipstatementRepositoryCustom slipstatementRepositoryCustom;
     private final EmployeeRepository employeeRepository;
+    @Autowired
+    private final TradeRepository tradeRepository;
+    private final TradeRepositoryCustom tradeRepositoryCustom;
 
-//    값 입력하는 WRITE 해줄 때 실행해주기
-//                        .basesalary(dformatter.format(salary.getBasesalary()))
-//            .overtimesalary(dformatter.format(salary.getOvertimesalary()))
-//            .totalpaymentsalary(dformatter.format(salary.getTotalpaymentsalary()))
-//            .earnedincometax(dformatter.format(earnedIncomeTax(BigDecimal.valueOf(salary.getTotalpaymentsalary()))))
-//            .localincomtax(dformatter.format(localIncomeTax(BigDecimal.valueOf(salary.getTotalpaymentsalary()))))
-//            .nationalpensionfee(dformatter.format(calculateNationalPensionFee(BigDecimal.valueOf(salary.getTotalpaymentsalary()))))
-//            .healthinsurancepremium(dformatter.format(calculateHealthInsurancePremium(BigDecimal.valueOf(salary.getTotalpaymentsalary()))))
-//            .employmentinsurancepremium(dformatter.format(calculateEmploymentInsurancePremium(BigDecimal.valueOf(salary.getTotalpaymentsalary()))))
-//            .longtermcareinsurancepremium(dformatter.format(calculateLongTermCareInsurancePremium(BigDecimal.valueOf(salary.getTotalpaymentsalary()))))
-//            .totaldeductionsamount(dformatter.format(totalDeductions(BigDecimal.valueOf(salary.getTotalpaymentsalary()))))
-//            .actualpaymentsalary(dformatter.format(longValue(calculateActualPayment(BigDecimal.valueOf(salary.getTotalpaymentsalary())))))
-//
     private DecimalFormat dformatter = new DecimalFormat("###,###");
 //    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    private SalaryDto salaryDto;
 
     public Header<List<SalaryDto>> getSalary(Pageable pageable, SearchCondition searchCondition) {
         List<SalaryDto> salaryDtos = new ArrayList<>();
@@ -68,10 +71,10 @@ public class AccountingService {
             SalaryDto salaryDto = SalaryDto.builder()
                     .salaryno(salary.getSalaryno())
                     .paymentdate(salary.getPaymentdate())
-                    .empid(salary.getEmpid())
+                    .empId(salary.getEmpId())
                     .empname(salary.getEmpname())
                     .deptname(salary.getDeptname())
-                    .jobname(salary.getEmplevel())
+                    .emplevel(salary.getEmplevel())
                     .workhours(salary.getWorkhours())
                     .overtimehours(salary.getOvertimehours())
                     .basesalary(dformatter.format(salary.getBasesalary()))
@@ -98,7 +101,7 @@ public class AccountingService {
         return Header.OK(salaryDtos, pagination);
     }
 
-    public SalaryDto getSalaryDetailList(String empid, java.util.Date paymentdate) {
+    public SalaryDto getSalaryDetailList(String empId, java.util.Date paymentdate) {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(paymentdate);
@@ -111,16 +114,17 @@ public class AccountingService {
         cal.add(Calendar.DAY_OF_MONTH, 1);
         java.util.Date nextDay = cal.getTime();
 
-        Salary entity = salaryRepository.findSalaryByTruncPaymentdateAndEmpid(startOfDay, nextDay, empid)
+        Salary entity = salaryRepository.findSalaryByTruncPaymentdateAndEmpId(startOfDay, nextDay, empId)
                 .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
 
         return SalaryDto.builder()
                 .salaryno(entity.getSalaryno())
                 .paymentdate(entity.getPaymentdate())
-                .empid(entity.getEmpid())
+                .emphiredate(entity.getEmphiredate())
+                .empId(entity.getEmpId())
                 .empname(entity.getEmpname())
                 .deptname(entity.getDeptname())
-                .jobname(entity.getEmplevel())
+                .emplevel(entity.getEmplevel())
                 .workhours(entity.getWorkhours())
                 .overtimehours(entity.getOvertimehours())
                 .basesalary(dformatter.format(entity.getBasesalary()))
@@ -185,130 +189,148 @@ public class AccountingService {
         return Header.OK(slipstatementDtos, pagination);
     }
 
-
-
-    // 건강보험료
-    public BigDecimal calculateHealthInsurancePremium(BigDecimal totalpaymentsalary) {
-        BigDecimal salary = totalpaymentsalary.subtract(new BigDecimal("200000"));
-        BigDecimal healthinsurancepremium = salary.multiply(new BigDecimal("0.03545"));
-        healthinsurancepremium = healthinsurancepremium.setScale(0, RoundingMode.HALF_UP);
-        return healthinsurancepremium;
+   // 건강보험료
+    public BigDecimal calculateHealthInsurancePremium(long totalPaymentSalary) {
+        BigDecimal salary = BigDecimal.valueOf(totalPaymentSalary).subtract(new BigDecimal("200000"));
+        BigDecimal healthInsurancePremium = salary.multiply(new BigDecimal("0.03545"));
+        return healthInsurancePremium.setScale(0, RoundingMode.HALF_UP);
     }
 
     // 고용보험료
-    public BigDecimal calculateEmploymentInsurancePremium(BigDecimal totalpaymentsalary) {
-        BigDecimal salary = totalpaymentsalary.subtract(new BigDecimal("200000"));
-        BigDecimal employmentinsurancepremium = salary.multiply(new BigDecimal("0.009"));
-        employmentinsurancepremium = employmentinsurancepremium.setScale(0, RoundingMode.HALF_UP);
-        return employmentinsurancepremium;
+    public BigDecimal calculateEmploymentInsurancePremium(long totalPaymentSalary) {
+        BigDecimal salary = BigDecimal.valueOf(totalPaymentSalary).subtract(new BigDecimal("200000"));
+        BigDecimal employmentInsurancePremium = salary.multiply(new BigDecimal("0.009"));
+        return employmentInsurancePremium.setScale(0, RoundingMode.HALF_UP);
     }
 
     // 국민연금료
-    public BigDecimal calculateNationalPensionFee(BigDecimal totalpaymentsalary) {;
-        BigDecimal nationalpensionfee;
-        if (totalpaymentsalary.compareTo(new BigDecimal("5530000")) <= 0) {
-            nationalpensionfee = totalpaymentsalary.multiply(new BigDecimal("0.045"));
+    public BigDecimal calculateNationalPensionFee(long totalPaymentSalary) {
+        BigDecimal salary = BigDecimal.valueOf(totalPaymentSalary);
+        BigDecimal nationalPensionFee;
+        if (salary.compareTo(new BigDecimal("5530000")) <= 0) {
+            nationalPensionFee = salary.multiply(new BigDecimal("0.045"));
         } else {
-            nationalpensionfee = new BigDecimal("5530000").multiply(new BigDecimal("0.045"));
+            nationalPensionFee = new BigDecimal("5530000").multiply(new BigDecimal("0.045"));
         }
-        nationalpensionfee = nationalpensionfee.setScale(0, RoundingMode.HALF_UP);
-        return nationalpensionfee;
+        return nationalPensionFee.setScale(0, RoundingMode.HALF_UP);
     }
 
     // 근로소득세
-    // 근로소득세는 지방소득세 계산식에 사용해야되므로 일단 BigDecimal 타입으로 리턴해준 뒤 나중에 사용할 때 longValue() 해주자.
-    public BigDecimal earnedIncomeTax(BigDecimal totalpaymentsalary) {
-        BigDecimal earnedincometax;
-        if (totalpaymentsalary.compareTo(new BigDecimal("14000000")) < 0) {
-            earnedincometax = totalpaymentsalary.multiply(new BigDecimal("0.06"));
-        } else if (totalpaymentsalary.compareTo(new BigDecimal("50000000")) < 0) {
-            earnedincometax = new BigDecimal("840000").add((totalpaymentsalary.subtract(new BigDecimal("14000000"))).multiply(new BigDecimal("0.15")));
-        } else if (totalpaymentsalary.compareTo(new BigDecimal("88000000")) < 0) {
-            earnedincometax = new BigDecimal("6240000").add((totalpaymentsalary.subtract(new BigDecimal("50000000"))).multiply(new BigDecimal("0.24")));
-        } else if (totalpaymentsalary.compareTo(new BigDecimal("150000000")) < 0) {
-            earnedincometax = new BigDecimal("15360000").add((totalpaymentsalary.subtract(new BigDecimal("88000000"))).multiply(new BigDecimal("0.35")));
-        } else if (totalpaymentsalary.compareTo(new BigDecimal("300000000")) < 0) {
-            earnedincometax = new BigDecimal("37060000").add((totalpaymentsalary.subtract(new BigDecimal("150000000"))).multiply(new BigDecimal("0.38")));
-        } else if (totalpaymentsalary.compareTo(new BigDecimal("500000000")) < 0) {
-            earnedincometax = new BigDecimal("94060000").add((totalpaymentsalary.subtract(new BigDecimal("300000000"))).multiply(new BigDecimal("0.40")));
-        } else if (totalpaymentsalary.compareTo(new BigDecimal("1000000000")) < 0) {
-            earnedincometax = new BigDecimal("174060000").add((totalpaymentsalary.subtract(new BigDecimal("500000000"))).multiply(new BigDecimal("0.42")));
+    public BigDecimal earnedIncomeTax(long totalPaymentSalary) {
+        BigDecimal salary = BigDecimal.valueOf(totalPaymentSalary);
+        BigDecimal earnedIncomeTax;
+        if (salary.compareTo(new BigDecimal("14000000")) < 0) {
+            earnedIncomeTax = salary.multiply(new BigDecimal("0.06"));
+        } else if (salary.compareTo(new BigDecimal("50000000")) < 0) {
+            earnedIncomeTax = new BigDecimal("840000").add((salary.subtract(new BigDecimal("14000000"))).multiply(new BigDecimal("0.15")));
+        } else if (salary.compareTo(new BigDecimal("88000000")) < 0) {
+            earnedIncomeTax = new BigDecimal("6240000").add((salary.subtract(new BigDecimal("50000000"))).multiply(new BigDecimal("0.24")));
+        } else if (salary.compareTo(new BigDecimal("150000000")) < 0) {
+            earnedIncomeTax = new BigDecimal("15360000").add((salary.subtract(new BigDecimal("88000000"))).multiply(new BigDecimal("0.35")));
+        } else if (salary.compareTo(new BigDecimal("300000000")) < 0) {
+            earnedIncomeTax = new BigDecimal("37060000").add((salary.subtract(new BigDecimal("150000000"))).multiply(new BigDecimal("0.38")));
+        } else if (salary.compareTo(new BigDecimal("500000000")) < 0) {
+            earnedIncomeTax = new BigDecimal("94060000").add((salary.subtract(new BigDecimal("300000000"))).multiply(new BigDecimal("0.40")));
+        } else if (salary.compareTo(new BigDecimal("1000000000")) < 0) {
+            earnedIncomeTax = new BigDecimal("174060000").add((salary.subtract(new BigDecimal("500000000"))).multiply(new BigDecimal("0.42")));
         } else {
-            earnedincometax = new BigDecimal("384060000").add((totalpaymentsalary.subtract(new BigDecimal("1000000000"))).multiply(new BigDecimal("0.45")));
+            earnedIncomeTax = new BigDecimal("384060000").add((salary.subtract(new BigDecimal("1000000000"))).multiply(new BigDecimal("0.45")));
         }
-        earnedincometax = earnedincometax.setScale(0, RoundingMode.HALF_UP);
-        return earnedincometax;
+        return earnedIncomeTax.setScale(0, RoundingMode.HALF_UP);
     }
-
     // 장기요양보험료
-    public BigDecimal calculateLongTermCareInsurancePremium(BigDecimal totalpaymentsalary) {
-
-        BigDecimal healthinsurancepremium = totalpaymentsalary.multiply(new BigDecimal("0.03545"));
-        BigDecimal longtermcareinsurancepremium = healthinsurancepremium.multiply(new BigDecimal("0.1281"));
-        longtermcareinsurancepremium = longtermcareinsurancepremium.setScale(0, RoundingMode.HALF_UP);
-        return longtermcareinsurancepremium;
+    public BigDecimal calculateLongTermCareInsurancePremium(long totalPaymentSalary) {
+        BigDecimal salary = BigDecimal.valueOf(totalPaymentSalary);
+        BigDecimal healthInsurancePremium = salary.multiply(new BigDecimal("0.03545"));
+        BigDecimal longTermCareInsurancePremium = healthInsurancePremium.multiply(new BigDecimal("0.1281"));
+        return longTermCareInsurancePremium.setScale(0, RoundingMode.HALF_UP);
     }
+
+
 
     // 지방소득세
-    public BigDecimal localIncomeTax(BigDecimal totalpaymentsalary) {
-        BigDecimal earnedincometax = earnedIncomeTax(totalpaymentsalary);
-        BigDecimal localincomtax = earnedincometax.multiply(new BigDecimal("0.1"));
-        localincomtax = localincomtax.setScale(0, RoundingMode.HALF_UP);
-        return localincomtax;
+    public BigDecimal localIncomeTax(long totalPaymentSalary) {
+        BigDecimal earnedIncomeTax = earnedIncomeTax(totalPaymentSalary);
+        BigDecimal localIncomeTax = earnedIncomeTax.multiply(new BigDecimal("0.1"));
+        return localIncomeTax.setScale(0, RoundingMode.HALF_UP);
     }
-
     // 총 공제액 계산기
-    public BigDecimal totalDeductions(BigDecimal totalpaymentsalary) {
-        BigDecimal healthinsurancepremium = calculateHealthInsurancePremium(totalpaymentsalary);
-        BigDecimal employmentinsurancepremium = calculateEmploymentInsurancePremium(totalpaymentsalary);
-        BigDecimal nationalpensionfee = calculateNationalPensionFee(totalpaymentsalary);
-        BigDecimal longtermcareinsurancepremium = calculateLongTermCareInsurancePremium(totalpaymentsalary);
-        BigDecimal earnedincometax = earnedIncomeTax(totalpaymentsalary);
-        BigDecimal localincomtax = localIncomeTax(earnedincometax);
+    public BigDecimal totalDeductions(long  totalPaymentSalary) {
+        BigDecimal healthInsurancePremium = calculateHealthInsurancePremium(totalPaymentSalary);
+        BigDecimal employmentInsurancePremium = calculateEmploymentInsurancePremium(totalPaymentSalary);
+        BigDecimal nationalPensionFee = calculateNationalPensionFee(totalPaymentSalary);
+        BigDecimal longTermCareInsurancePremium = calculateLongTermCareInsurancePremium(totalPaymentSalary);
+        BigDecimal earnedIncomeTax = earnedIncomeTax(totalPaymentSalary);
+        BigDecimal localIncomeTax = localIncomeTax(totalPaymentSalary);
 
-        BigDecimal totaldeductions = healthinsurancepremium
-                .add(employmentinsurancepremium)
-                .add(nationalpensionfee)
-                .add(longtermcareinsurancepremium)
-                .add(earnedincometax)
-                .add(localincomtax);
-        totaldeductions = totaldeductions.setScale(0, RoundingMode.HALF_UP);
-        return totaldeductions;
+        BigDecimal totalDeductions = healthInsurancePremium
+                .add(employmentInsurancePremium)
+                .add(nationalPensionFee)
+                .add(longTermCareInsurancePremium)
+                .add(earnedIncomeTax)
+                .add(localIncomeTax);
+        return totalDeductions.setScale(0, RoundingMode.HALF_UP);
     }
     // 실제지급액 계산기
-    public BigDecimal calculateActualPayment(BigDecimal totalpaymentsalary) {
-
-        BigDecimal totalDeductions = totalDeductions(totalpaymentsalary);
-        BigDecimal actualpaymentsalary = totalpaymentsalary.subtract(totalDeductions);
-        actualpaymentsalary = actualpaymentsalary.setScale(0, RoundingMode.HALF_UP);
-        return actualpaymentsalary;
+    public BigDecimal calculateActualPayment(long totalPaymentSalary) {
+        BigDecimal salary = BigDecimal.valueOf(totalPaymentSalary);
+        BigDecimal totalDeductions = totalDeductions(totalPaymentSalary);
+        BigDecimal actualpaymentsalary = salary.subtract(totalDeductions);
+        return actualpaymentsalary.setScale(0, RoundingMode.HALF_UP);
     }
 
 
-    public EmployeeDto getEmployee(String empid) {
-        Employee employee = employeeRepository.findByEmpId(empid).orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
-        return EmployeeDto.builder()
-                .empno(employee.getEmpno())
-                .empId(employee.getEmpId())
-                .emppw(employee.getEmppw())
-                .empname(employee.getEmpname())
-                .empphone(employee.getEmpphone())
-                .empaddress(employee.getEmpaddress())
-                .empemail(employee.getEmpemail())
-                .empbirth(employee.getEmpbirth().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                .emphiredate(employee.getEmphiredate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                .emplevel(employee.getEmplevel())
-                .empstatus(employee.getEmpstatus())
-                .deptname(employee.getDeptname())
-                .empprofile(employee.getEmpprofile())
-                .build();
-    }
     public Salary salaryWrite(Salary salary) {
+        // 계산 로직 수행
+        long totalPayment = salary.getTotalpaymentsalary();
+
+        salary.setEmpId(salary.getEmpId());
+        salary.setBasesalary(salary.getBasesalary());
+        salary.setOvertimesalary(salary.getOvertimesalary());
+        salary.setTotalpaymentsalary(salary.getTotalpaymentsalary());
+        salary.setEarnedincometax(earnedIncomeTax(totalPayment).intValue());
+        salary.setLocalincometax(localIncomeTax(totalPayment).intValue());
+        salary.setNationalpensionfee(calculateNationalPensionFee(totalPayment).intValue());
+        salary.setHealthinsurancepremium(calculateHealthInsurancePremium(totalPayment).intValue());
+        salary.setEmploymentinsurancepremium(calculateEmploymentInsurancePremium(totalPayment).intValue());
+        salary.setLongtermcareinsurancepremium(calculateLongTermCareInsurancePremium(totalPayment).intValue());
+        salary.setTotaldeductionsamount(totalDeductions(totalPayment).intValue());
+        salary.setActualpaymentsalary(calculateActualPayment(totalPayment).intValue());
+
+        // 수정된 객체를 저장
         return salaryRepository.save(salary);
     }
 
+    public EmployeeDto getEmployee(String empId) {
+        Optional<Employee> optionalEmployee = employeeRepository.findByEmpId(empId);
+        if (optionalEmployee.isPresent()) {
+            Employee employee = optionalEmployee.get();
+            return EmployeeDto.builder()
+                    .empno(employee.getEmpno())
+                    .empId(employee.getEmpId())
+                    .emppw(employee.getEmppw())
+                    .empname(employee.getEmpname())
+                    .empphone(employee.getEmpphone())
+                    .empaddress(employee.getEmpaddress())
+                    .empemail(employee.getEmpemail())
+                    .empbirth(employee.getEmpbirth().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                    .emphiredate(employee.getEmphiredate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+
+                    .emplevel(employee.getEmplevel())
+                    .empstatus(employee.getEmpstatus())
+                    .deptname(employee.getDeptname())
+                    .empprofile(employee.getEmpprofile())
+                    .build();
+        } else {
+            throw new RuntimeException("Could not find employee with ID: " + empId);
+        }
+    }
+
     public AllowancesDeductions adWrite(AllowancesDeductions allowancesDeductions) {
-        return null;
+        return allowancesDeductionsRepository.save(allowancesDeductions);
+    }
+    public void adRemove(String adcode) {
+        allowancesDeductionsRepository.deleteByAdcode(adcode);
     }
 
 
@@ -320,11 +342,55 @@ public class AccountingService {
         return null;
     }
 
-    public AllowancesDeductions adModify(AllowancesDeductions allowancesDeductions) {
-        return null;
-    }
 
     public Slipstatement slipModify(Slipstatement slipstatement) {
         return null;
     }
-}
+
+    public List<TradeSummaryDto> monthlySales() {
+        List<Object[]> results = tradeRepository.findMonthlySales();
+        List<TradeSummaryDto> tradeSummaryDtoList = results.stream()
+                .map(result -> new TradeSummaryDto(((Number) result[0]).intValue(),
+                        ((Number) result[1]).intValue(),
+                        ((Number) result[2]).longValue()))
+                .collect(Collectors.toList());
+        System.out.println(tradeSummaryDtoList);
+        return tradeSummaryDtoList;
+    }
+
+    public Header<List<TradeDto>> getRevenuelist(Pageable pageable, SearchCondition searchCondition) {
+
+            List<TradeDto> tradeDtos = new ArrayList<>();
+            Page<Trade> trades = tradeRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
+            for (Trade trade : trades) {
+                TradeDto tradeDto = TradeDto.builder()
+                        .tradingno(trade.getTradingno())
+                        .tradingday(trade.getTradingday())
+                        .duedate(trade.getDuedate())
+                        .productname(trade.getProductname())
+                        .unitprice(trade.getUnitprice())
+                        .quantity(trade.getQuantity())
+                        .tax(trade.getTax())
+                        .totalprice(trade.getTotalprice())
+                        .ordersdate(trade.getOrdersdate())
+                        .orderstype(trade.getOrderstype())
+                        .ordersprice(trade.getOrdersprice())
+                        .totalordersprice(trade.getTotalordersprice())
+                        .accountname(trade.getAccountname())
+                        .tradetype(trade.getTradetype())
+                        .build();
+                tradeDtos.add(tradeDto);
+            }
+
+            Pagination pagination = new Pagination(
+                    (int) trades.getTotalElements()
+                    , pageable.getPageNumber() + 1
+                    , pageable.getPageSize()
+                    , 10
+            );
+            return Header.OK(tradeDtos, pagination);
+        }
+    }
+
+
+

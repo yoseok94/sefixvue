@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class TradeDto {
     private long tradingno;
@@ -16,7 +14,7 @@ public class TradeDto {
     private String productname;
     private int unitprice;
     private int quantity;
-    private char includetax;
+    private boolean includetax;
     private int supplyprice;
     private int tax;
     private int totalprice;
@@ -27,5 +25,6 @@ public class TradeDto {
     private String accountname;
     private Long deptno;
     private String empid;
+    private Integer tradetype;
 
 }

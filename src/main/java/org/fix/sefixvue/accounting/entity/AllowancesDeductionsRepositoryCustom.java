@@ -32,7 +32,7 @@ public class AllowancesDeductionsRepositoryCustom {
                 .where(searchKeywords(searchCondition))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(allowancesDeductions.adno.desc())
+                .orderBy(allowancesDeductions.adno.asc())
                 .fetch();
 
         return new PageImpl<>(results, pageable, total);
@@ -41,17 +41,17 @@ public class AllowancesDeductionsRepositoryCustom {
     private BooleanExpression searchKeywords(SearchCondition searchCondition) {
 
     // 순번으로 검색
-        if (searchCondition.getSk().equals("adno")) {
-            int adcode = Integer.parseInt(searchCondition.getSv());
-            if (adcode != 0) {
-                return allowancesDeductions.adcode.eq(adcode);
+        if (searchCondition.getSk().equals("항목코드")) {
+            int 항목코드 = Integer.parseInt(searchCondition.getSv());
+            if (항목코드 != 0) {
+                return allowancesDeductions.adcode.eq(항목코드);
             }
 
     // 이름으로 검색
-        } else if (searchCondition.getSk().equals("adname")) {
-            String adname = searchCondition.getSv();
-            if (StringUtils.hasLength(adname)) {
-                return allowancesDeductions.adname.contains(adname);
+        } else if (searchCondition.getSk().equals("항목이름")) {
+            String 항목이름 = searchCondition.getSv();
+            if (StringUtils.hasLength(항목이름)) {
+                return allowancesDeductions.adname.contains(항목이름);
             }
         }
 
