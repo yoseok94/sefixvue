@@ -305,10 +305,11 @@ public class HrmService implements UserDetailsService {
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         try {
-            long intime = sdf.parse(attendence.getIntime().format(DateTimeFormatter.ofPattern("hh:mm"))).getTime();
-            long outtime = sdf.parse(attendence.getOuttime().format(DateTimeFormatter.ofPattern("hh:mm"))).getTime();
+            long intime = sdf.parse(attendence.getIntime().format(DateTimeFormatter.ofPattern("HH:mm"))).getTime();
+            long outtime = sdf.parse(attendence.getOuttime().format(DateTimeFormatter.ofPattern("HH:mm"))).getTime();
 
-            long result = (intime - outtime)/1000;
+            long result = (outtime - intime)/1000;
+            log.info(String.valueOf(result));
             if(result >= 28800 && result < 86400) {
                 attendence.setDivide("정상");
             }else{
