@@ -41,9 +41,9 @@ public class SalaryRepositoryCustom {
     }
 
     public BooleanExpression searchKeywords(String sk, String sv) {
-        if ("empid".equals(sk)) {
+        if ("empId".equals(sk)) {
             if (StringUtils.hasLength(sv)) {
-                return salary.empid.contains(sv);
+                return salary.empId.contains(sv);
             }
         } else if ("empname".equals(sk)) {
             if (StringUtils.hasLength(sv)) {

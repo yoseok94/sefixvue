@@ -1,5 +1,6 @@
 package org.fix.sefixvue.hrm.entity;
 
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.fix.sefixvue.hrm.entity.QEmployee.employee;
@@ -38,13 +41,22 @@ public class EmployeeRepositoryCustom {
     }
 
     private BooleanExpression searchKeywords(String sk, String sv) {
-        if("ID".equals(sk)) {
-            if(StringUtils.hasLength(sv)) {
+        if ("ID".equals(sk)) {
+            if (StringUtils.hasLength(sv)) {
                 return employee.empId.contains(sv);
             }
         } else if ("Name".equals(sk)) {
-            if(StringUtils.hasLength(sv)) {
+            if (StringUtils.hasLength(sv)) {
                 return employee.empname.contains(sv);
+            }
+        } else if ("deptname".equals(sk)) {
+            if (StringUtils.hasLength(sv)) {
+                return employee.deptname.contains(sv);
+            }
+        } else if ("emphiredate".equals(sk)) {
+            if (StringUtils.hasLength(sv)) {
+                LocalDate date = LocalDate.parse(sv);
+                return employee.emphiredate.eq(date);
             }
         }
 

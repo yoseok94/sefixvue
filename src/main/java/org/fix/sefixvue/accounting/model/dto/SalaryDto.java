@@ -13,9 +13,9 @@ import javax.persistence.Column;
 @Builder
 public class SalaryDto {
     private long salaryno;                              // 급여순번
-    private String empid;                               // 사원코드
+    private String empId;                               // 사원코드
     private String empname;                             // 사원이름
-    private String jobname;                               // 직급이름
+    private String emplevel;                               // 직급이름
     private String deptname;                             // 부서이름
     private int workhours;                              // 근무시간
     private int overtimehours;                              // 시간외근무시간
@@ -31,5 +31,5 @@ public class SalaryDto {
     private String totaldeductionsamount;                  // 공제총액
     private String actualpaymentsalary;                   // 실지급액
     private java.util.Date paymentdate;                 // 지급연월일
-    private java.util.Date emp_hiredate;                // 입사일자
+    private java.util.Date emphiredate;                // 입사일자
 }

@@ -51,4 +51,6 @@ public class Trade {
     private int deptno;
     @Column(name = "emp_id")
     private String empid;
+    @Column(name = "tradetype")
+    private Integer tradetype;
 }
