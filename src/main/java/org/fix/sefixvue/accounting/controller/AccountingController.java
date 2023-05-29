@@ -85,13 +85,8 @@ public class AccountingController {
         return accountingService.slipWrite(slipstatement);
     }
     @DeleteMapping("/remove/{adcode}")
-    public ResponseEntity<?> adRemove(@PathVariable String adcode) {
-        try {
-            allowancesDeductionsRepository.deleteByAdcode(adcode);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public void adRemove(@PathVariable String adcode) {
+        accountingService.adRemove(adcode);
     }
 
     @GetMapping("/monthlysales")

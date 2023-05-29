@@ -26,23 +26,17 @@ public class SlipstatementRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     public Page<Slipstatement> findAllBySearchCondition(Pageable pageable, SearchCondition searchCondition) {
-
         JPAQuery<Slipstatement> query = queryFactory.selectFrom(slipstatement)
                 .where(searchKeywords(searchCondition.getSk(), searchCondition.getSv()));
-
         long total = query.fetchCount();
-
         List<Slipstatement> results = query
                 .where(searchKeywords(searchCondition.getSk(), searchCondition.getSv()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(slipstatement.slipstatementno.desc())
                 .fetch();
-
-
         return new PageImpl<>(results, pageable, total);
     }
-
     public BooleanExpression searchKeywords(String sk, String sv) {
         if ("slipstatementno".equals(sk)) {
             if (StringUtils.hasLength(sv)) {

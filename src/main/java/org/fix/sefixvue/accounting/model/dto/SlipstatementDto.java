@@ -14,6 +14,7 @@ import javax.persistence.Column;
 public class SlipstatementDto {
     private long slipstatementno;               // 전표 순번
     private long tradingno;                     // 거래 순번
+    private String accountname;                  // 거래처 이름
     private String tradetype;                   // 거래 유형
     private long slipstatementamount;           // 전표 금액
     private String slipstatementbrief;          // 전표 적요
