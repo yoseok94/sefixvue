@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.fix.sefixvue.admin.entity.Product;
+import org.fix.sefixvue.hrm.entity.Employee;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Data
 @Entity
@@ -18,7 +21,7 @@ public class PlanDisbursement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "mySequence", sequenceName = "plan_disbursement_seq", allocationSize = 1)
     @Column(name = "plan_no")
-    private long planno;
+    private Long planno;
     @Column(name = "plan_title")
     private String plantitle;
     @Column(name = "target_quantity")
@@ -30,7 +33,7 @@ public class PlanDisbursement {
     @Column(name = "plan_remarks")
     private String planremarks;
     @Column(name = "plan_date")
-    private java.sql.Date plandate;
+    private Date plandate;
     @Column(name = "quantity")
     private int quantity;
     @Column(name = "disbursement_supply_price")
@@ -46,15 +49,16 @@ public class PlanDisbursement {
     @Column(name = "disbursement_remarks")
     private String disbursementremarks;
     @Column(name = "sent_date")
-    private java.sql.Date sentdate;
+    private Date sentdate;
     @Column(name = "status")
     private int status;
     @Column(name = "dept_name")
     private String deptname;
     @Column(name = "emp_id")
-    private String empid;
+    private String empId;
     @Column(name = "account_name")
     private String accountname;
     @Column(name = "product_no")
-    private int productno;
+    private Long productno;
+
 }
