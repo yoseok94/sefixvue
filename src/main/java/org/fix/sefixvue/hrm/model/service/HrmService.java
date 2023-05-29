@@ -30,6 +30,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -387,6 +389,24 @@ public class HrmService implements UserDetailsService {
         return list;
     }
 
+    class dateComparator implements Comparator<Attendence> {
+        @Override
+        public int compare(Attendence a1, Attendence a2) {
+            if(a1.getRequestdate() == null){
+                a1.setRequestdate(LocalDate.now());
+            }
+            if(a2.getRequestdate() == null){
+                a2.setRequestdate(LocalDate.now());
+            }
+            if (a1.getRequestdate().isAfter(a2.getRequestdate())) {
+                return 1;
+            } else if (a1.getRequestdate().isBefore(a2.getRequestdate())) {
+                return -1;
+            }
+            return 0;
+        }
+    }
+
     public List<AttendenceDto> getmylist(String empId) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String startDate = LocalDate.now().withDayOfMonth(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -404,10 +424,11 @@ public class HrmService implements UserDetailsService {
             }
         }
 
+        Collections.sort(attendenceDateList, new dateComparator());
 
         List<Attendence> attendenceList = new ArrayList<>();
         for(Attendence entity: attendenceDateList){
-          if(!entity.getRequestdate().isBefore(startDate2) && !entity.getRequestdate().isAfter(endDate2)){
+          if(entity.getRequestdate() != null && !entity.getRequestdate().isBefore(startDate2) && !entity.getRequestdate().isAfter(endDate2)){
               attendenceList.add(entity);
           }
         }
