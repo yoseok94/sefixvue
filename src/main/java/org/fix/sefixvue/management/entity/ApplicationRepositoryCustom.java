@@ -57,6 +57,10 @@ public class ApplicationRepositoryCustom {
             if (StringUtils.hasLength(sv)) {
                 return application.applevel.contains(sv);
             }
+        }else if ("Accept".equals(sk)) {
+            if (StringUtils.hasLength(sv)) {
+                return application.appaccept.contains(sv);
+            }
         }
 
         return null;
