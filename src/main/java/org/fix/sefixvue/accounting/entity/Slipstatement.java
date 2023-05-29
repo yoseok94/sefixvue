@@ -29,6 +29,8 @@ public class Slipstatement {
 
     @Column(name = "tradetype")
     private String tradetype;
+    @Column(name = "account_name")
+    private String accountname;
     @Column(name = "slipstatement_amount")
     private int slipstatementamount;
     @Column(name = "slipstatement_brief")

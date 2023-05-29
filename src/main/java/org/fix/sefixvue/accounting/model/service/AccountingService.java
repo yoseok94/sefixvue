@@ -57,17 +57,12 @@ public class AccountingService {
     private final TradeRepositoryCustom tradeRepositoryCustom;
 
     private DecimalFormat dformatter = new DecimalFormat("###,###");
-//    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     private SalaryDto salaryDto;
 
     public Header<List<SalaryDto>> getSalary(Pageable pageable, SearchCondition searchCondition) {
         List<SalaryDto> salaryDtos = new ArrayList<>();
-        List<EmployeeDto> employeeDtos = new ArrayList<>();
-
         Page<Salary> salarys = salaryRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
-
         for (Salary salary : salarys) {
-
             SalaryDto salaryDto = SalaryDto.builder()
                     .salaryno(salary.getSalaryno())
                     .paymentdate(salary.getPaymentdate())
@@ -91,7 +86,6 @@ public class AccountingService {
                     .build();
             salaryDtos.add(salaryDto);
         }
-
         Pagination pagination = new Pagination(
                 (int) salarys.getTotalElements()
                 , pageable.getPageNumber() + 1
@@ -102,7 +96,6 @@ public class AccountingService {
     }
 
     public SalaryDto getSalaryDetailList(String empId, java.util.Date paymentdate) {
-
         Calendar cal = Calendar.getInstance();
         cal.setTime(paymentdate);
         cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -166,9 +159,7 @@ public class AccountingService {
     public Header<List<SlipstatementDto>> getSlipstatement(Pageable pageable, SearchCondition searchCondition) {
         List<SlipstatementDto> slipstatementDtos = new ArrayList<>();
         Page<Slipstatement> slipstatements = slipstatementRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
-
         for(Slipstatement slipstatement : slipstatements) {
-
             SlipstatementDto slipstatementDto = SlipstatementDto.builder()
                     .slipstatementno(slipstatement.getSlipstatementno())
                     .tradingno(slipstatement.getTrade().getTradingno())
@@ -177,7 +168,6 @@ public class AccountingService {
                     .slipstatementbrief(slipstatement.getSlipstatementbrief())
                     .slipstatementdate(slipstatement.getSlipstatementdate())
                     .build();
-
             slipstatementDtos.add(slipstatementDto);
         }
         Pagination pagination = new Pagination(
@@ -217,7 +207,7 @@ public class AccountingService {
 
     // 근로소득세
     public BigDecimal earnedIncomeTax(long totalPaymentSalary) {
-        BigDecimal salary = BigDecimal.valueOf(totalPaymentSalary);
+        BigDecimal salary = BigDecimal.valueOf(totalPaymentSalary * 12);
         BigDecimal earnedIncomeTax;
         if (salary.compareTo(new BigDecimal("14000000")) < 0) {
             earnedIncomeTax = salary.multiply(new BigDecimal("0.06"));
@@ -236,7 +226,7 @@ public class AccountingService {
         } else {
             earnedIncomeTax = new BigDecimal("384060000").add((salary.subtract(new BigDecimal("1000000000"))).multiply(new BigDecimal("0.45")));
         }
-        return earnedIncomeTax.setScale(0, RoundingMode.HALF_UP);
+        return earnedIncomeTax.divide(new BigDecimal("12"), 0, RoundingMode.HALF_UP);
     }
     // 장기요양보험료
     public BigDecimal calculateLongTermCareInsurancePremium(long totalPaymentSalary) {
@@ -332,19 +322,8 @@ public class AccountingService {
     public void adRemove(String adcode) {
         allowancesDeductionsRepository.deleteByAdcode(adcode);
     }
-
-
     public Slipstatement slipWrite(Slipstatement slipstatement) {
-        return null;
-    }
-
-    public Salary salaryModify(Salary salary) {
-        return null;
-    }
-
-
-    public Slipstatement slipModify(Slipstatement slipstatement) {
-        return null;
+        return slipstatementRepository.save(slipstatement);
     }
 
     public List<TradeSummaryDto> monthlySales() {
@@ -359,7 +338,6 @@ public class AccountingService {
     }
 
     public Header<List<TradeDto>> getRevenuelist(Pageable pageable, SearchCondition searchCondition) {
-
             List<TradeDto> tradeDtos = new ArrayList<>();
             Page<Trade> trades = tradeRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
             for (Trade trade : trades) {
@@ -381,7 +359,6 @@ public class AccountingService {
                         .build();
                 tradeDtos.add(tradeDto);
             }
-
             Pagination pagination = new Pagination(
                     (int) trades.getTotalElements()
                     , pageable.getPageNumber() + 1

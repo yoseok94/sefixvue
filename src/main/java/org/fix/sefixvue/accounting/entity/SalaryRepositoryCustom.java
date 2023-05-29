@@ -21,25 +21,18 @@ import static org.fix.sefixvue.accounting.entity.QSalary.salary;
 public class SalaryRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-
     public Page<Salary> findAllBySearchCondition(Pageable pageable, SearchCondition searchCondition) {
-
         JPAQuery<Salary> query = queryFactory.selectFrom(salary)
                 .where(searchKeywords(searchCondition.getSk(), searchCondition.getSv()));
-
         long total = query.stream().count();
-
         List<Salary> results = query
                 .where(searchKeywords(searchCondition.getSk(), searchCondition.getSv()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(salary.salaryno.desc())
                 .fetch();
-
-
         return new PageImpl<>(results, pageable, total);
     }
-
     public BooleanExpression searchKeywords(String sk, String sv) {
         if ("empId".equals(sk)) {
             if (StringUtils.hasLength(sv)) {
