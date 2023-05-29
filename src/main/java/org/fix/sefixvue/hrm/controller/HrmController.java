@@ -65,6 +65,12 @@ public class HrmController {
             SearchCondition searchCondition) {
         return hrmService.getAttendenceList(pageable, searchCondition);
     }
+    @GetMapping("/hrm/adlist2")
+    public Header<List<AttendenceDto>> attendenceList2(
+            @PageableDefault(sort = {"attendenceno"}) Pageable pageable,
+            SearchCondition searchCondition) {
+        return hrmService.getAttendenceList2(pageable, searchCondition);
+    }
     @PatchMapping("/hrm/employeequit")
     public Employee employeeQuit(@RequestBody EmployeeDto employeeDto){
         return hrmService.updateEmpStatus(employeeDto);

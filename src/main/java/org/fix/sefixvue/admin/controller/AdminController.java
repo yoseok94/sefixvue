@@ -111,7 +111,7 @@ public class AdminController {
         adminService.deletePro(productno);
     }
 
-    @Value("D:/final_project/finalfix/public/upload")
+    @Value("C:/sefix/finalfix/public/upload")
     private String uploadPath;
 
     @PostMapping("/product/file")

@@ -135,6 +135,69 @@ public class HrmService implements UserDetailsService {
         return Header.OK(attendenceDtos, pagination);
     }
 
+    public Header<List<AttendenceDto>> getAttendenceList2(Pageable pageable, SearchCondition searchCondition) {
+        List<AttendenceDto> attendenceDtos = new ArrayList<>();
+
+        Page<Attendence> attendences = attendenceRepositoryCustom.findAllBySearchCondition2(pageable, searchCondition);
+        if(searchCondition.getSv() == null || searchCondition.getSv().equals("")){
+            for (Attendence attendence : attendences) {
+                AttendenceDto attendenceDto = AttendenceDto.builder()
+                        .attendenceno(attendence.getAttendenceno())
+                        .empId(attendence.getEmpId())
+                        .empname(attendence.getEmpname())
+                        .emplevel(attendence.getEmplevel())
+                        .reason(attendence.getReason())
+                        .reasonpr(attendence.getReasonpr())
+                        .deptname(attendence.getDeptname())
+                        .divide(attendence.getDivide())
+                        .requestdate(attendence.getRequestdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                        .requestresult(attendence.getRequestresult())
+                        .build();
+                attendenceDtos.add(attendenceDto);
+            }
+        }else{
+            for (Attendence attendence : attendences) {
+                if(attendence.getEmpId().contains(searchCondition.getSv()) && searchCondition.getSk().equals("ID")) {
+                    AttendenceDto attendenceDto = AttendenceDto.builder()
+                            .attendenceno(attendence.getAttendenceno())
+                            .empId(attendence.getEmpId())
+                            .empname(attendence.getEmpname())
+                            .emplevel(attendence.getEmplevel())
+                            .reason(attendence.getReason())
+                            .reasonpr(attendence.getReasonpr())
+                            .deptname(attendence.getDeptname())
+                            .divide(attendence.getDivide())
+                            .requestdate(attendence.getRequestdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                            .requestresult(attendence.getRequestresult())
+                            .build();
+                    attendenceDtos.add(attendenceDto);
+                }else if(attendence.getEmpname().contains(searchCondition.getSv()) && searchCondition.getSk().equals("Name")) {
+                    AttendenceDto attendenceDto = AttendenceDto.builder()
+                            .attendenceno(attendence.getAttendenceno())
+                            .empId(attendence.getEmpId())
+                            .empname(attendence.getEmpname())
+                            .emplevel(attendence.getEmplevel())
+                            .reason(attendence.getReason())
+                            .reasonpr(attendence.getReasonpr())
+                            .deptname(attendence.getDeptname())
+                            .divide(attendence.getDivide())
+                            .requestdate(attendence.getRequestdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                            .requestresult(attendence.getRequestresult())
+                            .build();
+                    attendenceDtos.add(attendenceDto);
+                }
+            }
+        }
+
+        Pagination pagination = new Pagination(
+                (int) attendences.getTotalElements()
+                , pageable.getPageNumber() + 1
+                , pageable.getPageSize()
+                , 10
+        );
+
+        return Header.OK(attendenceDtos, pagination);
+    }
     public Employee updateEmpStatus(EmployeeDto employeeDto) {
         Employee employee = employeeRepository.findById(employeeDto.getEmpno()).orElseThrow(() -> new RuntimeException("사원 정보를 찾을 수 없습니다."));
         employee.setEmpstatus(employeeDto.getEmpstatus());
@@ -389,6 +452,7 @@ public class HrmService implements UserDetailsService {
 
         return list;
     }
+
 
     class dateComparator implements Comparator<Attendence> {
         @Override

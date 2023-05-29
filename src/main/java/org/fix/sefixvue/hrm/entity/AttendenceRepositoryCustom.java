@@ -38,6 +38,43 @@ public class AttendenceRepositoryCustom {
         return new PageImpl<>(results, pageable, total);
     }
 
+    public Page<Attendence> findAllBySearchCondition2(Pageable pageable, SearchCondition searchCondition) {
+        JPAQuery<Attendence> query = queryFactory.selectFrom(attendence)
+                .where(searchKeywords2(searchCondition.getSk(), searchCondition.getSv()));
+
+        long total = query.stream().count();   //여기서 전체 카운트 후 아래에서 조건작업
+
+        List<Attendence> results = query
+                .where(searchKeywords2(searchCondition.getSk(), searchCondition.getSv()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(attendence.attendenceno.desc())
+                .fetch();
+
+        return new PageImpl<>(results, pageable, total);
+    }
+
+    private BooleanExpression searchKeywords2(String sk, String sv) {
+        if("ID".equals(sk)) {
+            if(StringUtils.hasLength(sv)) {
+                return attendence.empId.contains(sv)
+                        .and(attendence.reason.eq("연차"))
+                        .or(attendence.reason.eq("조퇴"))
+                        .or(attendence.reason.eq("기타"));
+            }
+        } else if ("Name".equals(sk)) {
+            if(StringUtils.hasLength(sv)) {
+                return attendence.empname.contains(sv)
+                        .and(attendence.reason.eq("연차"))
+                        .or(attendence.reason.eq("조퇴"))
+                        .or(attendence.reason.eq("기타"));
+            }
+        }
+        return attendence.reason.eq("연차")
+                .or(attendence.reason.eq("조퇴"))
+                .or(attendence.reason.eq("기타"));
+    }
+
     private BooleanExpression searchKeywords(String sk, String sv) {
         if("ID".equals(sk)) {
             if(StringUtils.hasLength(sv)) {
