@@ -58,6 +58,7 @@ public class HrmService implements UserDetailsService {
                     .deptname(employee.getDeptname())
                     .empstatus(employee.getEmpstatus())
                     .emplevel(employee.getEmplevel())
+                    .emphiredate(employee.getEmphiredate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .build();
 
             employeeDtos.add(employeeDto);
