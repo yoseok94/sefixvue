@@ -86,7 +86,7 @@ public class BoardService {
         return noticeRepository.save(entity);
     }
 
-    public void delete(Long noticeno){
+    public void deleteNoti(Long noticeno){
         Notice entity = noticeRepository.findById(noticeno).orElseThrow(() -> new RuntimeException("없음"));
         noticeRepository.delete(entity);
     }
@@ -95,17 +95,15 @@ public class BoardService {
     //----------------------------------------------------
     public Header<List<EventDto>> getEventList(Pageable pageable, SearchCondition searchCondition) {
         List<EventDto> etos = new ArrayList<>();
-
         Page<Event> eventEntities = eventRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
         for (Event entity : eventEntities) {
             EventDto eto = EventDto.builder()
                     .eventno(entity.getEventno())
                     .eventtitle(entity.getEventtitle())
-                    .eventdate(entity.getEventdate())
+                    .eventdate(entity.getEventdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                     .build();
             etos.add(eto);
         }
-
         Pagination pagination = new Pagination(
                 (int) eventEntities.getTotalElements()
                 , pageable.getPageNumber() + 1
@@ -113,23 +111,49 @@ public class BoardService {
                 , 10
         );
         return Header.OK(etos, pagination);
-
-
     }
 
 
     public EventDto getEvent(Long eventno) {
         Event entity = eventRepository.findById(eventno).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
-        // findById(id) 하면 SELECT + WHERE 작동됨. 람다 표현식 사용됨. 의미는 ~~ 조건을 만족시켰을 떄 에러 발생시켜라
+        // findById(id) 하면 SELECT + WHERE 작동됨. 람다 표현식 사용됨. 의미는 ~~ 조건을 만족시켰을 떄 에러 발생시켜
         return EventDto.builder()
                 .eventno(entity.getEventno())
                 .eventtitle(entity.getEventtitle())
                 .eventcontent(entity.getEventcontent())
                 .eventfile(entity.getEventfile())
                 .eventimg(entity.getEventimg())
-                .eventdate(entity.getEventdate())
+                .eventdate(entity.getEventdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                 .build();
         // 컬럼값 하나씩 꺼내서 매핑 -> DTO 객체 리턴
+    }
+
+
+
+    public Event create(EventDto eventDto){
+        Event entity = Event.builder()
+                .eventtitle(eventDto.getEventtitle())
+                .eventcontent(eventDto.getEventcontent())
+                .eventfile(eventDto.getEventfile())
+                .eventimg(eventDto.getEventimg())
+                .eventdate(LocalDateTime.now())
+                .build();
+        return eventRepository.save(entity);
+    }
+
+
+    public Event update(EventDto eventDto){
+        Event entity = eventRepository.findById(eventDto.getEventno()).orElseThrow(() -> new RuntimeException("게시물 없음"));
+        entity.setEventtitle(eventDto.getEventtitle());
+        entity.setEventcontent(eventDto.getEventcontent());
+        entity.setEventfile(eventDto.getEventfile());
+        entity.setEventimg(eventDto.getEventimg());
+        return eventRepository.save(entity);
+    }
+
+    public void deleteEve(Long eventno){
+        Event entity = eventRepository.findById(eventno).orElseThrow(() -> new RuntimeException("없음"));
+        eventRepository.delete(entity);
     }
 
 }

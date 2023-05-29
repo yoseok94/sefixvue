@@ -1,6 +1,5 @@
 package org.fix.sefixvue.admin.controller;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,17 +18,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.io.File;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import static org.fix.sefixvue.admin.util.UploadFileUtils.uploadFile;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,93 +36,137 @@ import java.util.UUID;
 @RestController
 public class AdminController {
     private final AdminService adminService;
-
-
     private final ProductService productService;
 
-    @Value("${upload.path}")
-    private String uploadPath;
+    //-----------------------------
+    //View lists by page
+    @GetMapping("/dept/list")
+    public Header<List<DeptDto>> deptList(
+            @PageableDefault(sort = {"deptno"}) Pageable pageable,
+            SearchCondition searchCondition) {
+        return adminService.getDeptList(pageable, searchCondition);
+    }
+
+    //read(get)
+    @GetMapping("/dept/{deptno}")
+    public DeptDto getDept(@PathVariable Long deptno) {
+        return adminService.getDept(deptno);
+    }
 
 
+    //regist(insert)
+    @PostMapping("/dept")
+    public Dept deptWrite(@RequestBody DeptDto deptDto) {
 
-//    @PostMapping("/product")
-//    public Product productCreate(@RequestBody ProductDto productDto) {
-//        return adminService.create(productDto);
+        return adminService.create(deptDto);
+    }
+
+    //modify(update)
+    @PatchMapping("/dept")
+    public Dept deptUp(@RequestBody DeptDto deptDto){
+        return  adminService.update(deptDto);
+    }
+
+
+    @DeleteMapping("/dept/{deptno}")
+    public void delDept(@PathVariable Long deptno) {
+
+        adminService.deleteDep(deptno);
+    }
+
+    //------------------------------------------------------------------------
+    @GetMapping("/product/list")
+    public Header<List<ProductDto>> productList(
+            @PageableDefault(sort = {"productno"}) Pageable pageable,
+            SearchCondition searchCondition) {
+        return adminService.getProductList(pageable, searchCondition);
+    }
+
+//    @GetMapping("/product/{productno}")
+//    public ResponseEntity<Product> read(@PathVariable("productno") Long productno) throws Exception {
+//        log.info("read");
+//        Product product = this.productService.read(productno);
+//        return new ResponseEntity<>(product, HttpStatus.OK);
 //    }
 
-
+    @GetMapping("/product/{productno}")
+    public ProductDto getProduct(@PathVariable Long productno) {
+        return adminService.getProduct(productno);
+    }
 
     @PostMapping("/product")
+    public Product productCreate(@RequestBody ProductDto productDto) {
+        return adminService.create(productDto);
+    }
+
+
+    @PatchMapping("/product")
+    public Product productUpdate(@RequestBody ProductDto productDto){
+        return adminService.update(productDto);
+    }
+
+    @DeleteMapping("/product/{productno}")
+    public void productDelete(@PathVariable Long productno){
+
+        adminService.deletePro(productno);
+    }
+
+    @Value("D:/final_project/finalfix/public/upload")
+    private String uploadPath;
+
+    @PostMapping("/product/file")
     public ResponseEntity<Product> register(
             @RequestPart("product") String productString,
             @RequestPart("file") MultipartFile picture) throws Exception {
-
-        log.info("productString: " + productString);
-
-        Product product = new ObjectMapper().readValue(productString, Product.class);
-
-        String productid = product.getProductid();
-        String productname = product.getProductname();
-        String productcategory = product.getProductcategory();
-        int productcost = product.getProductcost();
-        int purchaseprice = product.getPurchaseprice();
-        int consumerprice = product.getConsumerprice();
-//            Date productdate = product.getProductdate();
-        String productremarks = product.getProductremarks();
-
-        if(productid != null){
-            log.info("product.getProductid(): " + productid);
-            product.setProductid(productid);
-        }
-        if(productname != null){
-            product.setProductname(productname);
-        }
-        if(productcategory != null){
-            product.setProductcategory(productcategory);
-        }
-        if(productcost != 0){
-            product.setProductcost(productcost);
-        }
-        if(purchaseprice != 0){
-            product.setPurchaseprice(purchaseprice);
-        }
-        if(consumerprice != 0){
-            product.setConsumerprice(consumerprice);
-        }
-        if(productremarks != null){
-            product.setProductremarks(productremarks);
-        }
+             log.info("productString: " + productString);
+             Product product = new ObjectMapper().readValue(productString, Product.class);
+            String productid = product.getProductid();
+            String productname = product.getProductname();
+            String productcategory = product.getProductcategory();
+            int productcost = product.getProductcost();
+            int purchaseprice = product.getPurchaseprice();
+            int consumerprice = product.getConsumerprice();
+            String productdate = String.valueOf(product.getProductdate());
+            String productremakrs = product.getProductremarks();
+            if(productid != null){
+                product.setProductid(productid);
+            }
+            if(productname != null){
+                product.setProductname(productname);
+            }
+            if(productcategory != null) {
+                product.setProductcategory(productcategory);
+            }
+            if(productcost != 0){
+                product.setProductcost(productcost);
+            }
+            if(purchaseprice != 0) {
+                product.setPurchaseprice(purchaseprice);
+            }
+            if(consumerprice !=0){
+                product.setConsumerprice(consumerprice);
+            }
+            if(productremakrs != null){
+                product.setProductremarks(productremakrs);
+            }
+            if(productdate != null){
+                product.setProductdate(LocalDateTime.now());
+            }
         product.setPicture(picture);
-
         MultipartFile file = product.getPicture();
-
-        log.info("originalName : " + file.getOriginalFilename());
-        log.info("size : " + file.getSize());
-        log.info("contentType : " + file.getContentType());
-
         String createdFileName = uploadFile(file.getOriginalFilename(), file.getBytes());
-
         product.setProductimg(createdFileName);
-
-
-//        this.adminService.regist(product);
         this.productService.regist(product);
-
-
-        log.info("register product.getProductno : " + product.getProductno());
-
         Product createdProduct = new Product();
         createdProduct.setProductno(product.getProductno());
-
         return new ResponseEntity<>(createdProduct, HttpStatus.OK);
     }
-
 
 
     private String uploadFile(String originalName, byte[] fileData) throws Exception {
         UUID uid = UUID.randomUUID();
 
-        String createdFileName = uid.toString() + "_" + originalName;
+        String createdFileName = uid.toString() + "-" + originalName;
 
         File target = new File(uploadPath, createdFileName);
 
@@ -172,174 +215,66 @@ public class AdminController {
         return null;
     }
 
-
-//    @GetMapping("/product/{productno}")
-//    public ProductDto getProduct(@PathVariable Long productno) {
-//        return adminService.getProduct(productno);
+    //    @PutMapping
+//    public ResponseEntity<Product> modify(@RequestPart("product") String productString, @RequestPart(name = "file", required = false) MultipartFile picture) throws Exception {
+//
+//        log.info("itemString: " + productString);
+//
+//        Product product = new ObjectMapper().readValue(productString, Product.class);
+//
+//        String productid = product.getProductid();
+//        String productname = product.getProductname();
+//        String productcategory = product.getProductcategory();
+//        int productcost = product.getProductcost();
+//        int purchaseprice = product.getPurchaseprice();
+//        int consumerprice = product.getConsumerprice();
+//        String productremarks = product.getProductremarks();
+//        if(productid != null){
+//            log.info("product.getProductid(): " + productid);
+//            product.setProductid(productid);
+//        }
+//        if(productname != null){
+//            product.setProductname(productname);
+//        }
+//        if(productcategory != null){
+//            product.setProductcategory(productcategory);
+//        }
+//        if(productcost != 0){
+//            product.setProductcost(productcost);
+//        }
+//        if(purchaseprice != 0){
+//            product.setPurchaseprice(purchaseprice);
+//        }
+//        if(consumerprice != 0){
+//            product.setConsumerprice(consumerprice);
+//        }
+//        if(productremarks != null){
+//            product.setProductremarks(productremarks);
+//        }
+//        if(picture != null) {
+//            product.setPicture(picture);
+//            MultipartFile file = product.getPicture();
+//
+//            log.info("originalName: " + file.getOriginalFilename());
+//            log.info("size: " + file.getSize());
+//            log.info("contentType: " + file.getContentType());
+//
+//            String createdFileName = uploadFile(file.getOriginalFilename(), file.getBytes());
+//            product.setProductimg(createdFileName);
+//        }
+//        else {
+//            Product oldProduct = this.productService.read(product.getProductno());
+//            product.setProductimg(oldProduct.getProductimg());
+//        }
+//        this.productService.modify(product);
+//        Product modifiedItem = new Product();
+//        modifiedItem.setProductno(product.getProductno());
+//        return new ResponseEntity<>(modifiedItem, HttpStatus.OK);
 //    }
 //
-
-    @GetMapping("/product/{productno}")
-    public ResponseEntity<Product> read(@PathVariable("productno") Long productno) throws Exception {
-        log.info("read");
-        Product product = this.productService.read(productno);
-        return new ResponseEntity<>(product, HttpStatus.OK);
-    }
-
-
-
-
-    @PutMapping
-    public ResponseEntity<Product> modify(@RequestPart("product") String productString, @RequestPart(name = "file", required = false) MultipartFile picture) throws Exception {
-
-        log.info("itemString: " + productString);
-
-        Product product = new ObjectMapper().readValue(productString, Product.class);
-
-        String productid = product.getProductid();
-        String productname = product.getProductname();
-        String productcategory = product.getProductcategory();
-        int productcost = product.getProductcost();
-        int purchaseprice = product.getPurchaseprice();
-        int consumerprice = product.getConsumerprice();
-        String productremarks = product.getProductremarks();
-        if(productid != null){
-            log.info("product.getProductid(): " + productid);
-            product.setProductid(productid);
-        }
-        if(productname != null){
-            product.setProductname(productname);
-        }
-        if(productcategory != null){
-            product.setProductcategory(productcategory);
-        }
-        if(productcost != 0){
-            product.setProductcost(productcost);
-        }
-        if(purchaseprice != 0){
-            product.setPurchaseprice(purchaseprice);
-        }
-        if(consumerprice != 0){
-            product.setConsumerprice(consumerprice);
-        }
-        if(productremarks != null){
-            product.setProductremarks(productremarks);
-        }
-        if(picture != null) {
-            product.setPicture(picture);
-            MultipartFile file = product.getPicture();
-
-            log.info("originalName: " + file.getOriginalFilename());
-            log.info("size: " + file.getSize());
-            log.info("contentType: " + file.getContentType());
-
-            String createdFileName = uploadFile(file.getOriginalFilename(), file.getBytes());
-            product.setProductimg(createdFileName);
-        }
-        else {
-            Product oldProduct = this.productService.read(product.getProductno());
-            product.setProductimg(oldProduct.getProductimg());
-        }
-        this.productService.modify(product);
-        Product modifiedItem = new Product();
-        modifiedItem.setProductno(product.getProductno());
-        return new ResponseEntity<>(modifiedItem, HttpStatus.OK);
-    }
-
-
-
-
-
-
-
-    //-----------------------------
-    //View lists by page
-    @GetMapping("/dept/list")
-    public Header<List<DeptDto>> deptList(
-            @PageableDefault(sort = {"deptno"}) Pageable pageable,
-            SearchCondition searchCondition) {
-        return adminService.getDeptList(pageable, searchCondition);
-    }
-
-
-
-    //read(get)
-    @GetMapping("/dept/{deptno}")
-    public DeptDto getDept(@PathVariable Long deptno) {
-        return adminService.getDept(deptno);
-    }
-
-
-    //regist(insert)
-    @PostMapping("/dept")
-    public Dept deptWrite(@RequestBody DeptDto deptDto) {
-
-        return adminService.create(deptDto);
-    }
-
-    //modify(update)
-    @PatchMapping("/dept")
-    public Dept deptUp(@RequestBody DeptDto deptDto){
-        return  adminService.update(deptDto);
-    }
-
-
-//    @PatchMapping("/dept/updept")
-//    public Dept deptUp(@RequestBody DeptDto deptDto){
-//        return  adminService.update(deptDto);
-//    }
-
-
-//@PatchMapping("/dept/{deptno}")
-//public Dept deptUp(@PathVariable Long deptno, @RequestBody DeptDto deptDto) {
-//    deptDto.setDeptno(deptno); // 'id' 파라미터를 'deptDto' 객체에 설정
-//    return adminService.update(deptDto);
-//}
-
-    @DeleteMapping("/dept/{deptno}")
-    public void delDept(@PathVariable Long deptno) {
-        adminService.delete(deptno);
-    }
-
-
-
-    //------------------------------------------------------------------------
-    @GetMapping("/product/list")
-    public Header<List<ProductDto>> productList(
-            @PageableDefault(sort = {"productno"}) Pageable pageable,
-            SearchCondition searchCondition) {
-        return adminService.getProductList(pageable, searchCondition);
-    }
-
-//    @GetMapping("/product/{productno}")
-//    public ProductDto getProduct(@PathVariable Long productno) {
-//        return adminService.getProduct(productno);
-//    }
+//
 //
 
 
-
-//    @PostMapping("/product")
-//    public Product productCreate(@RequestBody ProductDto productDto) {
-//        return adminService.create(productDto);
-//    }
-
-
-
-
-
-
-
-
-//
-//    @PatchMapping("/product")
-//    public Product productUpdate(@RequestBody ProductDto productDto){
-//        return adminService.update(productDto);
-//    }
-//
-    @DeleteMapping("/product/{productno}")
-    public void productDelete(@PathVariable Long productno){
-        adminService.delete(productno);
-    }
 
 }

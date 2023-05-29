@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -30,5 +31,5 @@ public class Event {
     @Column(name = "event_img")
     private String eventimg;    // 이벤트 첨부 이미지
     @Column(name = "event_date")
-    private java.sql.Date eventdate;    // 이벤트 작성 일시
+    private LocalDateTime eventdate;    // 이벤트 작성 일시
 }

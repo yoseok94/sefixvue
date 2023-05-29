@@ -2,6 +2,7 @@ package org.fix.sefixvue.board.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.fix.sefixvue.board.entity.Event;
 import org.fix.sefixvue.board.entity.Notice;
 import org.fix.sefixvue.board.model.dto.EventDto;
 import org.fix.sefixvue.board.model.dto.NoticeDto;
@@ -35,21 +36,24 @@ public class BoardController {
     }
 
     @PostMapping("/notice")
-    public Notice create(@RequestBody NoticeDto noticeDto) {
+    public Notice noticeWrite(@RequestBody NoticeDto noticeDto) {
 
         return boardService.create(noticeDto);
     }
 
     @PatchMapping("/notice")
-    public Notice update(@RequestBody NoticeDto noticeDto) {
+    public Notice noticeUp(@RequestBody NoticeDto noticeDto) {
         return boardService.update(noticeDto);
     }
 //
     @DeleteMapping("/notice/{noticeno}")
-    public void delete(@PathVariable Long noticeno) {
-        boardService.delete(noticeno);
+    public void noticeDel(@PathVariable Long noticeno) {
+        boardService.deleteNoti(noticeno);
     }
     //--------------------------------
+
+
+
         @GetMapping("/event/list")
         public Header<List<EventDto>> eventList(
                 @PageableDefault(sort = {"eventno"}) Pageable pageable,
@@ -58,10 +62,23 @@ public class BoardController {
             return boardService.getEventList(pageable, searchCondition);
         }
 
-        @GetMapping("/event/{evnetno}")
+        @GetMapping("/event/{eventno}")
         public EventDto getEvent(@PathVariable Long eventno) {
             return boardService.getEvent(eventno);
         }
 
+        @PostMapping("/event")
+        public Event eventWrite(@RequestBody EventDto eventDto) {
 
+            return boardService.create(eventDto);
+        }
+        @PatchMapping("/event")
+        public Event eventUp(@RequestBody EventDto eventDto) {
+            return boardService.update(eventDto);
+        }
+        //
+        @DeleteMapping("/event/{eventno}")
+        public void eventDel(@PathVariable Long eventno) {
+            boardService.deleteEve(eventno);
+        }
 }

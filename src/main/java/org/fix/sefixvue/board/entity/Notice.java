@@ -19,7 +19,6 @@ public class Notice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @SequenceGenerator(name = "mySequence", sequenceName = "notice_seq", allocationSize = 1)
     @Column(name = "notice_no")
     private long noticeno;    // 공지사항 순번
     @Column(name = "notice_title")

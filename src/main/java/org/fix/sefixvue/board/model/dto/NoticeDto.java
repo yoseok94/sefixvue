@@ -17,4 +17,9 @@ public class NoticeDto {
     private String noticeimg;    // 공지사항 첨부 이미지
     private String noticedate;    // 공지사항 작성 일시
 
+
+
+
+
+
 }

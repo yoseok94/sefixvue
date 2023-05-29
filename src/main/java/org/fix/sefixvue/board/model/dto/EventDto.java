@@ -15,5 +15,5 @@ public class EventDto {
     private String eventcontent;    // 이벤트 작성 내용
     private String eventfile;    // 이벤트 첨부 문서
     private String eventimg;    // 이벤트 첨부 이미지
-    private java.sql.Date eventdate;    // 이벤트 작성 일시
+    private String eventdate;    // 이벤트 작성 일시
 }
