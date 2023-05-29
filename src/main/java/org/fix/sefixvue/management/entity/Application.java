@@ -6,19 +6,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder                              // 클래스로 컴파일 되라.
-@Table(name = "Application")                // 자동으로 생성될 테이블 이름이 BOARD 이다
+@Builder                              // 클래스로 컴파일
+@Table(name = "Application")          // 자동으로 생성될 테이블 이름이 BOARD
 @Entity
 public class Application {
     @Id                               // PK 처리
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "app_no")
     private long appno;
+    @Column(name = "emp_no")
+    private long empno;
     @Column(name = "app_id")
     private String appid;
     @Column(name = "app_name")
@@ -28,9 +31,9 @@ public class Application {
     @Column(name = "app_email")
     private String appemail;
     @Column(name = "app_birth")
-    private LocalDateTime appbirth;
+    private LocalDate appbirth;
     @Column(name = "app_hiredate")
-    private LocalDateTime apphiredate;
+    private LocalDate apphiredate;
     @Column(name = "app_level")
     private String applevel;
     @Column(name = "app_status")
