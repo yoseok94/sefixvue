@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -35,11 +36,12 @@ public class Product {
     @Column(name = "consumer_price")
     private int consumerprice;    // 상품 소비자가
     @Column(name = "product_date")
-    private java.sql.Date productdate;    // 상품 작성 일시
+    private LocalDateTime productdate;    // 상품 작성 일시
     @Column(name = "product_img")
     private String productimg;    // 상품 첨부 이미지
     @Column(name = "product_remarks")
     private String productremarks;    // 상품 비고
+
 
     @Transient
     private MultipartFile picture;

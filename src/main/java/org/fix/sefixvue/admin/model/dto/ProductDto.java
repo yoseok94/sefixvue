@@ -17,7 +17,7 @@ public class ProductDto {
     private int productcost;    // 상품 원가
     private int purchaseprice;    // 상품 구매가
     private int consumerprice;    // 상품 소비자가
-    private java.sql.Date productdate;    // 상품 작성 일시
+    private String productdate;    // 상품 작성 일시
     private String productimg;    // 상품 첨부 이미지
     private String productremarks;    // 상품 비고
 

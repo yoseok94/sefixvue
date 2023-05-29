@@ -28,9 +28,9 @@ public class AdminService{
     private final ProductRepository productRepository;
     private final ProductRepositoryCustom productRepositoryCustom;
 
+    //dept list, paging, search
     public Header<List<DeptDto>> getDeptList(Pageable pageable, SearchCondition searchCondition) {
         List<DeptDto> dtos = new ArrayList<>();
-
         Page<Dept> deptEntities = deptRepositoryCustom.findAllBySearchCondition(pageable, searchCondition);
         for (Dept entity : deptEntities) {
             DeptDto ddto = DeptDto.builder()
@@ -41,7 +41,6 @@ public class AdminService{
                     .deptdate(entity.getDeptdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                     .build();
             dtos.add(ddto);
-
         }
         Pagination pagination = new Pagination(
                 (int) deptEntities.getTotalElements()
@@ -52,7 +51,7 @@ public class AdminService{
         return Header.OK(dtos, pagination);
     }
 
-
+    //one search dept
     public DeptDto getDept(Long deptno) {
         Dept entity = deptRepository.findById(deptno).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
         // findById(id) 하면 SELECT + WHERE 작동됨. 람다 표현식 사용됨. 의미는 ~~ 조건을 만족시켰을 떄 에러 발생시켜라
@@ -68,12 +67,7 @@ public class AdminService{
 
 
 
-
-
-
-
-
-    //등록
+    //insert dept
     public Dept create(DeptDto deptDto){
         Dept entity = Dept.builder()
                 .deptid(deptDto.getDeptid())
@@ -84,7 +78,7 @@ public class AdminService{
         return deptRepository.save(entity);
     }
 
-    //수정
+    //update dept
     public Dept update(DeptDto deptDto){
         Dept entity = deptRepository.findById(deptDto.getDeptno()).orElseThrow(() -> new RuntimeException("못찾음"));
         entity.setDeptid(deptDto.getDeptid());
@@ -93,14 +87,17 @@ public class AdminService{
         return deptRepository.save(entity);
     }
 
-    //삭제
-    public void delete(Long deptno){
+
+    //delete dept
+    public void deleteDep(Long deptno){
         Dept entity = deptRepository.findById(deptno).orElseThrow(() -> new RuntimeException("없음"));
         deptRepository.delete(entity);
     }
 
     //----------------------------------------------------------------------
 
+
+    //product list, paging, search
     public Header<List<ProductDto>> getProductList(Pageable pageable, SearchCondition searchCondition){
         List<ProductDto> ptos = new ArrayList<>();
 
@@ -114,8 +111,7 @@ public class AdminService{
                     .productcost(pentity.getProductcost())
                     .purchaseprice(pentity.getPurchaseprice())
                     .consumerprice(pentity.getConsumerprice())
-                    .productdate(pentity.getProductdate())
-                    .productimg(pentity.getProductimg())
+                    .productdate(pentity.getProductdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                     .productremarks(pentity.getProductremarks())
                     .build();
             ptos.add(ppto);
@@ -131,10 +127,9 @@ public class AdminService{
     }
 
 
-
-    public ProductDto getProduct(Long productno){
+    public ProductDto getProduct(Long productno) {
         Product entity = productRepository.findById(productno).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
-
+        // findById(id) 하면 SELECT + WHERE 작동됨. 람다 표현식 사용됨. 의미는 ~~ 조건을 만족시켰을 떄 에러 발생시켜라
         return ProductDto.builder()
                 .productno(entity.getProductno())
                 .productid(entity.getProductid())
@@ -143,39 +138,65 @@ public class AdminService{
                 .productcost(entity.getProductcost())
                 .purchaseprice(entity.getPurchaseprice())
                 .consumerprice(entity.getConsumerprice())
-                .productdate(entity.getProductdate())
-                .productimg(entity.getProductimg())
+                .productdate(entity.getProductdate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                 .productremarks(entity.getProductremarks())
+                .productimg(entity.getProductimg())
                 .build();
-
     }
 
 
+    //isnert product
+    public Product create(ProductDto productDto){
+        Product pentity = Product.builder()
+                .productid(productDto.getProductid())
+                .productname(productDto.getProductname())
+                .productcategory(productDto.getProductcategory())
+                .productcost(productDto.getProductcost())
+                .purchaseprice(productDto.getPurchaseprice())
+                .consumerprice(productDto.getConsumerprice())
+                .productdate(LocalDateTime.now())
+                .productremarks(productDto.getProductremarks())
+                .build();
+        return productRepository.save(pentity);
+    }
+
+    //update product
+    public Product update(ProductDto productDto){
+        Product entity = productRepository.findById(productDto.getProductno()).orElseThrow(() -> new RuntimeException("못찾음"));
+        entity.setProductid(productDto.getProductid());
+        entity.setProductname(productDto.getProductname());
+        entity.setProductcategory(productDto.getProductcategory());
+        entity.setProductcost(productDto.getProductcost());
+        entity.setPurchaseprice(productDto.getPurchaseprice());
+        entity.setConsumerprice(productDto.getConsumerprice());
+        entity.setProductremarks(productDto.getProductremarks());
+        return productRepository.save(entity);
+    }
+
+    //delete product
+    public void deletePro(Long productno){
+        Product entity = productRepository.findById(productno).orElseThrow(() -> new RuntimeException("없음"));
+        productRepository.delete(entity);
+    }
 
 
-
-//    public Product Create(ProductDto productDto){
-//        Product pentity = Product.builder()
-//                .deptid(deptDto.getDeptid())
-//                .deptname(deptDto.getDeptname())
-//                .productid(deptDto.getProductid())
+//    public ProductDto getProduct(Long productno){
+//        Product entity = productRepository.findById(productno).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+//
+//        return ProductDto.builder()
+//                .productno(entity.getProductno())
+//                .productid(entity.getProductid())
+//                .productname(entity.getProductname())
+//                .productcategory(entity.getProductcategory())
+//                .productcost(entity.getProductcost())
+//                .purchaseprice(entity.getPurchaseprice())
+//                .consumerprice(entity.getConsumerprice())
+//                .productdate(entity.getProductdate())
+//                .productimg(entity.getProductimg())
+//                .productremarks(entity.getProductremarks())
 //                .build();
-//        return deptRepository.save(entity);
+//
 //    }
-//
-//    public Product Update(ProductDto productDto){
-//        Product entity = deptRepository.findById(deptDto.getDeptno()).orElseThrow(() -> new RuntimeException("못찾음"));
-//        entity.setDeptid(deptDto.getDeptid());
-//        entity.setDeptname(deptDto.getDeptname());
-//        entity.setProductid(deptDto.getProductid());
-//
-//        return deptRepository.save(entity);
-//    }
-//
-    public void Delete(Long id){
-        Dept entity = deptRepository.findById(id).orElseThrow(() -> new RuntimeException("없음"));
-        deptRepository.delete(entity);
-    }
 
 
 
